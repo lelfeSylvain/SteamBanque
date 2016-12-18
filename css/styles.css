@@ -1,0 +1,174 @@
+/* 
+    Created on : 19 mars 2016, 17:45:43
+    Author     : sylvain
+*/
+
+/************************************************************************
+Police de caractères spécifiques
+************************************************************************/
+/* @font-face kit by Fonts2u (http://www.fonts2u.com) */ 
+@font-face {
+    font-family:"Rock Salt";
+    src:url("font/RockSalt.eot?") format("eot"),url("font/RockSalt.woff") format("woff"),url("font/RockSalt.ttf") format("truetype"),url("font/RockSalt.svg#RockSalt") format("svg");
+    font-weight:normal;
+    font-style:normal;
+}
+
+/************************************************************************
+ Style général
+ ************************************************************************/
+body {
+    background-color : #333;
+    /* gère les coupures de mots */
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+    /* aucune marge par défaut*/ 
+    margin:0;
+    padding:0;
+    border:0;			/* This removes the border around the viewport in old versions of IE */
+    /* on utilise toute la place */ 
+    width:100%;
+    height: 100%;
+}
+
+/* section principal */
+body>section{
+    width:96%;			/* page width minus left and right padding */
+    left:2%;
+    background-color : #333;
+    color: chocolate; 
+    font-family:  "Arial", "Trebuchet MS";
+    /* a tester si c'est utile
+    min-height: 800px;
+    min-width: 800px;*/
+    display : flex;
+    flex-direction : column;
+    justify-content: space-between;
+    margin : auto;
+}
+
+/* tous les header on des majuscules et de l'espacement */
+header {
+    font-size : 1.2em;
+    font-weight: bold;
+    padding-bottom: 3px;
+    text-align: center;
+    letter-spacing: 2px;
+    font-variant-caps:  petite-caps;
+}
+
+/* les Liens */
+a:link {
+    color : SandyBrown;
+}
+a:visited {
+    color : SaddleBrown;
+}
+/************************************************************************
+affichage des menus est encapsuler dans cette section
+ ************************************************************************/
+section.menu {
+    display : flex;
+    flex-direction : column;
+    justify-content: space-around;
+}
+
+/* La première lettre de chaque ligne est en majuscule */
+.boite ::first-letter {
+    text-transform: capitalize;
+}
+
+/* div boite */
+.boite { 
+    padding: 2px 2px 2px 5px ;    
+    word-wrap: break-word;
+    display : flex;
+    flex-direction: column ;
+    justify-content: space-between;
+}
+/* affiche la date du jour*/ 
+.jour{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    color: #DD0;
+    font-weight: bold;
+    text-decoration: none;
+    font-family: "Rock Salt",arial,serif;
+    font-size:18px;
+    text-align: center;
+    max-height : 110px;
+}
+
+.j1 {
+    display : flex;
+    justify-content: center;
+    margin : 0px 5px 0px 5px ;
+}
+
+.unecase.soir.num9 {
+    background-image : url(../images/logosansfond.png);
+    background-position:100% 0%;
+}
+
+/* pour la saisie des menus */
+.midi.saisi {
+    background-color: lightgoldenrodyellow; 
+
+    color: chocolate; 
+
+}
+
+.saisi {
+    width: 40%;
+    margin: 5px;
+}
+/* la case sélectionnée : c'est-à-dire celle qu'on met en valeur */
+.selection {
+    font-size : 1.2em;
+    height: 120px;
+}
+
+.selection.tantot{
+    background-color: #dadada ; 
+}
+
+.selection.matin{
+    background-color:  aqua ; 
+    color:  maroon; 
+}
+/* si c'est un message*/ 
+.message {
+    margin: auto ;
+    text-align: center;
+    font-size : 1.4em;
+}
+
+/* style des affichages des textes des repas */
+.repas {
+
+}
+
+/* les types de plat */
+.entree,
+.plat,
+.lait,
+.dessert {    
+    margin : 0 0 3px 0;
+}
+
+/*Pour les commentaires*/
+.commentaire {}
+
+/************************************************************************
+navigation du menu
+ ************************************************************************/
+nav.principal {
+    display : flex;
+    flex-direction : row;
+    justify-content: space-between;
+    margin-top: 10px;
+}

@@ -1,0 +1,314 @@
+/* 
+    Created on : 19 mars 2016, 17:45:43
+    Author     : sylvain
+*/
+
+/************************************************************************
+affichage des menus est encapsuler dans cette section
+ ************************************************************************/
+/* une ligne du menu de la semaine 
+cette ligne est répétée 5 fois */
+.ligneMenu {
+    display : flex;
+    flex-direction : row;
+    justify-content: space-around;
+    margin: 10px 5px 0 5px ;
+} 
+/* une ligne est composée de :  un jour smallscreen, unecase, un jour et unecase */
+
+.unecase {   
+    display : flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: auto;
+    border-radius:5px;
+    height: 120px;
+    background-color: grey;
+    color:black;
+    overflow:  auto;
+}
+
+/* affiche la date du jour*/ 
+.jour{
+    width: 150px;
+    flex-direction: column;
+}
+
+.jour.smallscreen {
+    display :  none;
+}
+/* les types des cases menus*/
+.midi.tantot {
+    background-color: lightgoldenrodyellow; 
+    width: 40%;
+    color: chocolate; 
+    background-repeat:no-repeat;
+    background-image : url(../images/sun2.png);
+    background-position:115% -120%;
+}
+.soir.tantot {
+    width: 60%;
+    background-repeat:no-repeat;
+    background-image : url(../images/moon1.png);
+    background-position:108% 50%;
+}
+
+.midi.matin {
+    background-color: lightgoldenrodyellow; 
+    width: 60%;
+    color: chocolate; 
+    background-repeat:no-repeat;
+    background-image : url(../images/sun.png);
+    background-position:110% 90%;
+}
+.soir.matin {
+    width: 40%;
+    background-repeat:no-repeat;
+    background-image : url(../images/moon2.png);
+    background-position:102% 50%;
+}
+
+.unecase.soir.num9 {
+    background-image : url(../images/logosansfond.png);
+    background-position:100% 0%;
+}
+
+/* pour la saisie des menus */
+.midi.saisi {
+    background-color: lightgoldenrodyellow; 
+
+    color: chocolate; 
+
+}
+
+.saisi {
+    width: 40%;
+    margin: 5px;
+}
+/* la case sélectionnée : c'est-à-dire celle qu'on met en valeur */
+.selection {
+    font-size : 1.2em;
+    height: 120px;
+}
+
+.selection.tantot{
+    background-color: #dadada ; 
+}
+
+.selection.matin{
+    background-color:  aqua ; 
+    color:  maroon; 
+}
+/* si c'est un message*/ 
+.message {
+    margin: auto ;
+    text-align: center;
+    font-size : 1.4em;
+}
+
+/* tous les formulaires */
+.formulaire {
+    background-color:  grey;
+    color:black;
+    width: 60%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+
+/************************************************************************
+formulaire de saisie des menus
+ ************************************************************************/
+
+.dateFormulaireSaisie {
+    font-size : 1.4em;
+    margin: 5px 5px 20px 05px;
+}
+
+.formulaireSaisie {
+    display : flex;
+    flex-direction : column;
+    justify-content: flex-start;
+    padding: 5px ;
+    margin: 10px;
+    width: 80%;
+    height: 80%;
+}
+
+
+.formulaireBoutonRadio {
+    display : flex;
+    flex-direction : column;
+    justify-content: flex-start;
+}
+
+/* gère la coloration du formulaire en fonction de la case cochée */
+#radiorepas:checked,
+#radiomessage:checked,
+#radiorepas:checked ~  #frmradiorepas,
+#radiomessage:checked ~ #frmradiomessage,
+#radiorepas:checked ~ label,
+#radiomessage:checked ~ label {
+    background-color:  #dadada;
+}
+
+.formulaireLigneRadio>label {
+    width: 100px;
+}
+
+.formulaireLesChamps {
+    display : flex;
+    flex-direction : column;
+    justify-content:  center;
+    padding-left: 40px;
+}
+.formulaireLigneChamp {
+    display : flex;
+    flex-direction : row;    
+    justify-content: flex-start;
+    padding: 5px ;
+}
+.formulaireLigneRadio {
+    display : flex;
+    flex-direction : row;    
+    justify-content: flex-start;
+    padding: 5px ;
+}
+.formulaireColonneLibelle {
+    display : flex;
+    flex-direction : column;    
+    justify-content:  flex-end;
+    padding: 0px 5px 5px  5px ;
+}
+
+.formulaireBoutonValidation{
+    display : flex;
+    flex-direction :row;
+    justify-content:    flex-end;
+    width: 60%;
+    margin :30px;
+    height: 30px;
+}
+
+.formulaireLogin {
+    min-height : 400px;
+    display : flex;
+    flex-direction : column; 
+    justify-content:center;
+
+}
+.formulaireBoutonRepas{
+
+}
+
+.palibel{
+    padding-bottom: 8px; 
+    margin:  0px 5px 0px 15px;
+    width: 70px;
+}
+.palibel2{
+    padding-bottom: 8px; 
+    margin:  0px 5px 0px 15px;
+    width: 120px;
+}
+
+.pachamp{
+    margin-bottom: 8px;
+}
+
+.boutonValidation {
+    margin: 0px 30px 0px 30px;
+}
+
+.boutonConnexion {
+    margin-left: 10px;
+}
+
+/************************************************************************
+Formulaire changement de mot de passe
+ ************************************************************************/
+
+.formulaireLigneDesc {
+     margin:  3px 10px 5px 10px;
+}
+.large{
+    width: 200px;
+}
+
+#msg {
+    color:  brown;
+}
+
+.mrp {
+    margin-right: 10px;
+}
+
+.mrp:invalid {
+    background-color:  #aa6666;
+}
+
+.mrp:valid {
+    background-color:  #55aa55;
+}
+
+.boutonChanger {
+    margin-left: 450px;
+}
+/************************************************************************
+navigation du menu
+ ************************************************************************/
+nav.principal {
+    display : flex;
+    flex-direction : row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/**
+Entete design avec coin arrondi
+affiche les dates de la semaine
+*/
+
+.entete {
+    background-color : whitesmoke;
+    height: 30px;
+    width: 800px;
+    color:  chocolate;
+    border-radius : 0 0 20px 0  / 0 0 90% 0  ;
+}
+
+body>section>header.principal {
+    font-size : 1.4em;
+}
+
+/* Pied de page */
+/* pied de page principal qui est au dessous de la section principal */
+footer {
+    font-size : 0.8em;
+    text-align: right;
+    display : flex;
+    flex-flow : column wrap-reverse;
+    justify-content:  flex-end;
+    margin-right: 5px;
+    
+    
+
+    
+}
+
+footer>nav {
+    background-color : whitesmoke;
+    margin: 10px 0 10px 0; 
+    width: 800px;
+    color:  chocolate;
+    border-radius : 20px 0 0 0  / 90% 0 0 0  ;
+
+}
+
+div.pied {
+    padding-right: 5px;
+}
+
+div.pied>p {
+    margin : 0px;
+}

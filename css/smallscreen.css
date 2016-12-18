@@ -1,0 +1,196 @@
+/* 
+    Created on : 19 mars 2016, 17:45:43
+    Author     : sylvain
+*/
+
+/************************************************************************
+affichage des menus est encapsuler dans cette section
+ ************************************************************************/
+
+/* une ligne du menu de la semaine 
+cette ligne est répétée 5 fois */
+.ligneMenu {
+    display : flex;
+    flex-direction : column;
+    justify-content: space-around;
+    align-content: flex-start;
+    margin: 10px 5px 5px 5px ;
+} 
+/* une ligne est composée de :  un jour smallscreen, unecase, un jour et unecase */
+
+.unecase {   
+    display : flex;
+    flex-direction: row;
+    flex: 1 0 auto;
+    justify-content: center;
+    margin: auto;
+    border-radius:5px;
+    height: 120px;
+    background-color: grey;
+    color:black;
+    overflow:  auto;
+    margin-bottom: 5px;
+
+}
+/* La première lettre de chaque ligne est en majuscule */
+.boite ::first-letter {
+    text-transform: capitalize;
+}
+
+.jour.largescreen {
+    display : none;
+}
+
+.jour{
+    display: flex;
+    flex-direction: row;
+}
+
+/* les types des cases menus*/
+.midi.tantot {
+    background-color: lightgoldenrodyellow; 
+    width: 100%;
+    color: chocolate; 
+    
+}
+.soir.tantot {
+    width: 100%;
+    
+}
+
+.midi.matin {
+    background-color: lightgoldenrodyellow; 
+    width: 100%;
+    color: chocolate; 
+    
+}
+.soir.matin {
+    width: 100%;
+    
+}
+
+.unecase.soir.num9 {
+   display:none;
+}
+
+/* pour la saisie des menus */
+.midi.saisi {
+   display:none;
+
+}
+
+.saisi {
+   display:none;
+}
+/* la case sélectionnée : c'est-à-dire celle qu'on met en valeur */
+.selection {
+    font-size : 1.0em;
+    height: 120px;
+}
+
+.selection.tantot{
+    background-color: #dadada ; 
+}
+
+.selection.matin{
+    background-color:  aqua ; 
+    color:  maroon; 
+}
+/* si c'est un message*/ 
+.message {
+    margin: auto ;
+    text-align: center;
+    font-size : 1.2em;
+}
+
+/* formulaire de saisie des menus */
+.dateFormulaireSaisie {
+    display:none;
+}
+
+.formulaireSaisie {
+    display:none;
+}
+
+.formulaireBoutonRadio {
+    display:none;
+}
+
+.formulaireLesChamps {
+   display:none;
+}
+.formulaireLigneChamp {
+   display:none;
+}
+.formulaireLigneRadio {
+    display:none;
+}
+.formulaireColonneLibelle {
+    display:none;;
+}
+
+.formulaireBoutonValidation{
+    display:none;
+}
+
+.formulaireLogin {
+    display:none;
+
+}
+.formulaireBoutonRepas{
+display:none;
+}
+
+.palibel{
+    display:none;
+}
+.palibel2{
+   display:none;
+}
+
+.pachamp{
+    display:none;
+}
+
+.boutonValidation {
+   display:none;
+}
+
+.boutonConnexion {
+    display:none;
+}
+/************************************************************************
+navigation du menu
+ ************************************************************************/
+nav.principal {
+    display:none;
+}
+
+/**
+Entete design avec coin arrondi
+affiche les dates de la semaine
+*/
+
+.entete {
+
+    display:none;
+
+    background-color : whitesmoke;
+    color:  chocolate;
+    border-radius : 0 0 20px 0  / 0 0 90% 0  
+}
+
+body>section>header.principal {
+    font-size : 1.2em;
+}
+
+/* Pied de page */
+/* pied de page principal qui est au dessous de la section principal */
+footer {
+    display:none;
+}
+
+footer>nav {
+    display:none;
+
+}
