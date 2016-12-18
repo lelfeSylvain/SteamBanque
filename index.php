@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
-/* Projet Trombi V1 
-  sylvain 25 juillet 2016
+/* Projet SteamBanque
+  sylvain 18 décembre 2016
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 

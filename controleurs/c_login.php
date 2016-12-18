@@ -7,7 +7,7 @@ if ($num === 'in') {// on se connecte
     if (isset($_POST['login']) && isset($_POST['password'])) {
         $login = clean($_POST['login']);
         $mdp = clean($_POST['reponse']);
-        $pdo = PDOMenu::getPdoMenu();
+        $pdo = PDOSB::getPdoSB();
         if ($rep = $pdo->getInfoUtil($login)) {// si j'ai une réponse du modèle
             if (Session::login($login, $mdp, $rep['pseudo'], $rep['mdp'])) {
                 $_SESSION['pseudo'] = $rep['pseudo'];

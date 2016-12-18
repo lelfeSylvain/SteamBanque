@@ -2,8 +2,6 @@
 
 include_once 'inc/class.MakeLog.php';
 
-  //include_once "inc/secret/configBD.php";
-
 /**
  * Modèle du projet : permet d'accéder aux données de la BD
  * La classe est munie d'un outil pour logger les requêtes
@@ -11,22 +9,22 @@ include_once 'inc/class.MakeLog.php';
  * @author sylvain
  * @date janvier-février 2016
  */
-class PDOTrombi {
+class PDOSB {
 
    
  // paramètres d'accès au SGBD
-    private static $serveur;
-    private static $bdd ;
-    private static $user  ;
-    private static $mdp ;
+    private static $serveur='mysql:host=localhost';
+    private static $bdd= 'dbname=sylvain'  ;
+    private static $user = 'sylvain' ;
+    private static $mdp= 'sylvain' ;
     // préfixe de toutes les tables
-    public static $prefixe ;
+    public static $prefixe ="SB_";
     // classe technique permettant d'accéder au SGBD
     private static $monPdo;
     // pointeur sur moi-même (pattern singleton)
     private static $moi = null;
     // active l'enregistrement des logs
-    private $modeDebug ;
+    private $modeDebug = true;
     private $monLog;
 
     /**
@@ -34,27 +32,34 @@ class PDOTrombi {
      * pour toutes les méthodes de la classe
      */
     private function __construct() {
-        include_once "inc/secret/configBD.php";
-        PDOTrombi::$monPdo = new PDO(PDOTrombi::$serveur . ';' . PDOTrombi::$bdd, PDOTrombi::$user, PDOTrombi::$mdp);
-        PDOTrombi::$monPdo->query("SET CHARACTER SET utf8");
+        
+        self::$monPdo = new PDO(self::$serveur . ';' . self::$bdd, self::$user, self::$mdp);
+        echo 'après le new PDO';
+        self::$monPdo->query("SET CHARACTER SET utf8");
+        echo 'efefe';
         // initialise le fichier log
         $this->monLog = new MakeLog("erreurSQL", "./log/", MakeLog::APPEND);
     }
 
     public function __destruct() {
-        PDOTrombi::$monPdo = null;
+        self::$monPdo = null;
     }
 
     /**
      * Fonction statique qui crée l'unique instance de la classe
-     * Appel : $instancePdoTrombi = PdoTrombi::getPdoTrombi();
-     * @return l'unique objet de la classe PdoTrombi
+     * Appel : $instancePdoSB = PdoSB::getPdoSB();
+     * @return l'unique objet de la classe PdoSB
      */
-    public static function getPDOTrombi() {
-        if (PDOTrombi::$moi == null) {
-            PDOTrombi::$moi = new PDOTrombi();
+    public static function getPdoSB() {
+        echo 'toto';
+        if (self::$moi === null) {
+                        echo 'dans le if';
+            
+            self::$moi = new PDOSB();
+            echo 'après';
         }
-        return PDOTrombi::$moi;
+        echo 'titi';
+        return self::$moi;
     }
 
     // enregistre la dernière requête faite dans un fichier log
@@ -70,12 +75,12 @@ class PDOTrombi {
      * @return type toutes les informations sur un utilisateur
      */
     public function getInfoUtil($name) {
-        //$sql="select num, pseudo,  mdp,  tsDerniereCx from ".PdoTrombi::$prefixe."user where pseudo='".$name."'";
-        $sql = "select num, pseudo,  mdp,  tsDerniereCx from " . PDOTrombi::$prefixe . "user where pseudo= ?";
-        $sth = PDOTrombi::$monPdo->prepare($sql);
+        //$sql="select num, pseudo,  mdp,  tsDerniereCx from ".PdoSB::$prefixe."user where pseudo='".$name."'";
+        $sql = "select num, pseudo,  mdp,  tsDerniereCx from " . self::$prefixe . "user where pseudo= ?";
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($name));
         $this->logSQL($sql);
-        //$rs = PdoTrombi::$monPdo->query($sql);
+        //$rs = PdoSB::$monPdo->query($sql);
 
         $ligne = $sth->fetch();
         return $ligne;
@@ -87,12 +92,12 @@ class PDOTrombi {
      */
     public function setDerniereCx($num) {
         $date = new DateTime();
-        //$sql="update ".PdoTrombi::$prefixe."util set tsDerniereCx ='".$date->format('Y-m-d H:i:s')."' where num=".$num;
-        $sql = "update " . PdoTrombi::$prefixe . "util set tsDerniereCx = ? where num= ?";
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        //$sql="update ".PdoSB::$prefixe."util set tsDerniereCx ='".$date->format('Y-m-d H:i:s')."' where num=".$num;
+        $sql = "update " . self::$prefixe . "util set tsDerniereCx = ? where num= ?";
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($date->format('Y-m-d H:i:s'), $num));
         $this->logSQL($sql);
-        //$rs =  PdoTrombi::$monPdo->exec($sql);
+        //$rs =  PdoSB::$monPdo->exec($sql);
     }
 
     /** insère un nouvel utilisateur dans la base
@@ -101,10 +106,10 @@ class PDOTrombi {
     // TODO : Pour le moment, on ajoute que le pseudo et le mdp
     // il faut aussi enregistrer les autres propriétés
     public function setNouveauUtil($pseudo, $mdp) {
-        $sql = "insert into " . PdoTrombi::$prefixe . "util (pseudo, mdp) values ('" . $pseudo . "','" . $mdp . "')";
+        $sql = "insert into " . self::$prefixe . "util (pseudo, mdp) values ('" . $pseudo . "','" . $mdp . "')";
         $this->logSQL($sql);
-        $sql = "insert into " . PdoTrombi::$prefixe . "util (pseudo, mdp) values (?,?)";
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sql = "insert into " . self::$prefixe . "util (pseudo, mdp) values (?,?)";
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($pseudo, $mdp));
         return $sth;
     }
@@ -116,9 +121,9 @@ class PDOTrombi {
 
     public function getNbConnexionDuJour() {
         $jour = new DateTime();
-        $sql = "SELECT nb FROM " . PdoTrombi::$prefixe . "log WHERE jour='" . $jour->format('Y-m-d') . "'";
+        $sql = "SELECT nb FROM " . self::$prefixe . "log WHERE jour='" . $jour->format('Y-m-d') . "'";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         $result = $sth->fetch();
         return $result['nb'];
@@ -130,9 +135,9 @@ class PDOTrombi {
 
     public function setPremiereConnexion() {
         $jour = new DateTime();
-        $sql = "INSERT INTO " . PdoTrombi::$prefixe . "log (jour,nb) VALUES ('" . $jour->format('Y-m-d') . "', '0')";
+        $sql = "INSERT INTO " . self::$prefixe . "log (jour,nb) VALUES ('" . $jour->format('Y-m-d') . "', '0')";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         return $sth;
     }
@@ -142,10 +147,10 @@ class PDOTrombi {
      */
 
     public function getNbIP($ip) {
-        $sql = "SELECT COUNT(*) AS nb FROM " . PdoTrombi::$prefixe . "connexions WHERE ip='" . $ip . "'";
+        $sql = "SELECT COUNT(*) AS nb FROM " . self::$prefixe . "connexions WHERE ip='" . $ip . "'";
         $this->logSQL($sql);
-        $sql = "SELECT COUNT(*) AS nb FROM " . PdoTrombi::$prefixe . "connexions WHERE ip=?";
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sql = "SELECT COUNT(*) AS nb FROM " . self::$prefixe . "connexions WHERE ip=?";
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($ip));
         $result = $sth->fetch();
         $this->logSQL($result['nb']);
@@ -162,10 +167,10 @@ class PDOTrombi {
         } else {
             $user = "";
         }
-        $sql = "INSERT INTO " . PdoTrombi::$prefixe . "connexions (ip,time,pseudo) VALUES ('" . $ip . "', " . time() . ",'" . $user . "')";
+        $sql = "INSERT INTO " . self::$prefixe . "connexions (ip,time,pseudo) VALUES ('" . $ip . "', " . time() . ",'" . $user . "')";
         $this->logSQL($sql);
-        $sql = "INSERT INTO " . PdoTrombi::$prefixe . "connexions (ip,time,pseudo) VALUES (?,?,?)";
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sql = "INSERT INTO " . self::$prefixe . "connexions (ip,time,pseudo) VALUES (?,?,?)";
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($ip, time(), $user));
         return $sth;
     }
@@ -176,9 +181,9 @@ class PDOTrombi {
 
     public function incLog() {
         $jour = new DateTime();
-        $sql = "UPDATE " . PdoTrombi::$prefixe . "log SET nb=nb+1 WHERE jour='" . $jour->format('Y-m-d') . "'";
+        $sql = "UPDATE " . self::$prefixe . "log SET nb=nb+1 WHERE jour='" . $jour->format('Y-m-d') . "'";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         return $sth;
     }
@@ -188,10 +193,10 @@ class PDOTrombi {
      */
 
     public function updateIP($ip) {
-        $sql = "UPDATE " . PdoTrombi::$prefixe . "connexions SET time=" . time() . " WHERE ip='" . $ip . "'";
+        $sql = "UPDATE " . self::$prefixe . "connexions SET time=" . time() . " WHERE ip='" . $ip . "'";
         $this->logSQL($sql);
-        $sql = "UPDATE " . PdoTrombi::$prefixe . "connexions SET time=? WHERE ip=?";
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sql = "UPDATE " . self::$prefixe . "connexions SET time=? WHERE ip=?";
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array(time(), $ip));
         return $sth;
     }
@@ -202,9 +207,9 @@ class PDOTrombi {
 
     public function delOldTS() {
         $timestamp_5min = time() - 300; // 60 * 5 = nombre de secondes écoulées en 5 minutes
-        $sql = "DELETE FROM " . PdoTrombi::$prefixe . "connexions WHERE time < " . $timestamp_5min;
+        $sql = "DELETE FROM " . self::$prefixe . "connexions WHERE time < " . $timestamp_5min;
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         return $sth;
     }
@@ -215,9 +220,9 @@ class PDOTrombi {
 
     public function getNbVisiteur() {
         $jour = new DateTime();
-        $sql = "SELECT count(*) as nb FROM " . PdoTrombi::$prefixe . "connexions";
+        $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "connexions";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         $result = $sth->fetch();
         return $result['nb'];
@@ -228,27 +233,27 @@ class PDOTrombi {
      *       */
 
     public function getLesPseudosConnectes() {
-        $sql = "SELECT pseudo  FROM " . PdoTrombi::$prefixe . "connexions ";
+        $sql = "SELECT pseudo  FROM " . self::$prefixe . "connexions ";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         $result = $sth->fetchAll();
         return $result;
     }
 
     public function getMaxConnexion() {
-        $sql = "SELECT max(nb) as nbmax FROM " . PdoTrombi::$prefixe . "log ";
+        $sql = "SELECT max(nb) as nbmax FROM " . self::$prefixe . "log ";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute();
         $result = $sth->fetch();
         return $result["nbmax"];
     }
     
     public function getJourConnexion($jour){
-        $sql = "SELECT jour FROM " . PdoTrombi::$prefixe . "log WHERE nb = ? order by 1 desc ";
+        $sql = "SELECT jour FROM " . self::$prefixe . "log WHERE nb = ? order by 1 desc ";
         $this->logSQL($sql);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($jour));
         $result = $sth->fetch();
         return $result["jour"];
@@ -260,9 +265,9 @@ class PDOTrombi {
      */
 
     public function verifierAncienMdP($pseudo,$mdp) {
-        $sql = "SELECT count(*) as nb FROM " . PdoTrombi::$prefixe . "user where pseudo= ? and mdp=?";
+        $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "user where pseudo= ? and mdp=?";
         $this->logSQL($sql." ".$pseudo." ".$mdp);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($pseudo,$mdp));
         $result = $sth->fetch();
         $this->logSQL($result['nb']);
@@ -276,9 +281,9 @@ class PDOTrombi {
 
     public function setMdP($pseudo,$mdp,$ancien) {
         //$jour = new DateTime();
-        $sql = "UPDATE " . PdoTrombi::$prefixe . "user set mdp= ? where pseudo= ? and mdp=?";
+        $sql = "UPDATE " . self::$prefixe . "user set mdp= ? where pseudo= ? and mdp=?";
         $this->logSQL($sql.$pseudo." ".$mdp);
-        $sth = PdoTrombi::$monPdo->prepare($sql);
+        $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($mdp,$pseudo,$ancien));
         $result = $sth->fetch();
         return $result;

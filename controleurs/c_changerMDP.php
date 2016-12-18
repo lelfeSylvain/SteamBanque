@@ -13,7 +13,7 @@ if ($num === 'check') {// on récupère les données saisies
         $nouveau = clean($_POST['nouveau']);
         $confirmation = clean($_POST['confirmation']);
         if ($nouveau === $confirmation) {// au cas ou le JS serait désactivé
-            $pdo = PDOMenu::getPdoMenu();
+            $pdo = PDOSB::getPdoSB();
             if (1 === ((int) $pdo->verifierAncienMdP($_SESSION['username'], $ancien))) {//le mot de passe saisi est le bon
                 $pdo->setMdP($_SESSION['username'], $nouveau, $ancien);
                 $texteNav = "Le mot de passe a été mis à jour.";

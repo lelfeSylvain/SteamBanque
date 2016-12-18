@@ -2,14 +2,16 @@
 
 require_once 'inc/class.Session.php';
 Session::init();
-require_once 'inc/class.PDOTrombi.php';
-$_GLOBAL['titre'] = "Trombi";
+require_once 'inc/class.PDOSB.php';
+$_GLOBAL['titre'] = "Steam-Banque";
 include 'vues/v_entete.php';
 // constantes 
 define("EOL", "<br />\n"); // fin de ligne html et saut de ligne
 define("EL", "\n"); //  saut de ligne 
 // instanciation du modèle PDO
-$pdo = PDOTrombi::getPdoTrombi();
+echo 'yesy';
+$pdo = PDOSB::getPdoSB();
+echo 'test';
 $tabJour = array("lundi ", "mardi ", "mercredi ", "jeudi ", "vendredi ");
 $tabMois = array("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
 $_SESSION['debug'] = "hidden";
