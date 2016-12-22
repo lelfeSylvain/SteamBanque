@@ -2,6 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
+ * temps écoulé = 6h15
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
@@ -13,9 +14,9 @@ if (!isset($_REQUEST['uc'])) {//s'il n'y a pas d'uc alors on initie le comportem
     $uc = 'defaut';
     $num = 'actuelle';
 } else { // s'il y a un uc, on l'utilise après l'avoir nettoyé
-    $uc = clean($_REQUEST['uc']);
+    $uc = filter_input(INPUT_GET, 'uc', FILTER_SANITIZE_STRING);
     if (isset($_REQUEST['num'])) {
-        $num = clean($_REQUEST['num']);
+        $num = filter_input(INPUT_GET, 'num', FILTER_SANITIZE_STRING);
     } else {// pas de num -> valeur par défaut
         $num = "actuelle";
     }
@@ -25,7 +26,7 @@ if ($uc === 'login') {
 }
 // si l'utilisateur n'est pas identifié, il doit le faire
 elseif (!Session::isLogged()) {
-    include('controleurs/c_accueil.php');
+    include('controleurs/c_login.php');
 } else {// à partir d'ici, l'utilisateur est forcément connecté
     
     // justement on enregistre la dernière activité de l'utilisateur dans la BD

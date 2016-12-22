@@ -41,9 +41,7 @@ body>section{
     background-color : #333;
     color: chocolate; 
     font-family:  "Arial", "Trebuchet MS";
-    /* a tester si c'est utile
-    min-height: 800px;
-    min-width: 800px;*/
+    min-height: 95vh;
     display : flex;
     flex-direction : column;
     justify-content: space-between;
@@ -68,12 +66,13 @@ a:visited {
     color : SaddleBrown;
 }
 /************************************************************************
-affichage des menus est encapsuler dans cette section
+affichage des menus est encapsulé dans cette section
  ************************************************************************/
 section.menu {
     display : flex;
     flex-direction : column;
     justify-content: space-around;
+    
 }
 
 /* La première lettre de chaque ligne est en majuscule */

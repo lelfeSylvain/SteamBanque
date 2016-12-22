@@ -9,9 +9,7 @@ include 'vues/v_entete.php';
 define("EOL", "<br />\n"); // fin de ligne html et saut de ligne
 define("EL", "\n"); //  saut de ligne 
 // instanciation du modèle PDO
-echo 'yesy';
 $pdo = PDOSB::getPdoSB();
-echo 'test';
 $tabJour = array("lundi ", "mardi ", "mercredi ", "jeudi ", "vendredi ");
 $tabMois = array("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
 $_SESSION['debug'] = "hidden";
@@ -39,7 +37,7 @@ function logout() {
     $_SESSION['debug'] = "hidden";
     unset($_SESSION['tsDerniereCx']);
     unset($_SESSION['numUtil']);
-    header('Location: index.php?uc=lecture&num=actuelle');
+    
 }
 
 /*
