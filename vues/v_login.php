@@ -14,11 +14,12 @@ echo $texteNav;
     </div>
     <div class='formulaireLigneChamp'>
         <p class="palibel2">Mot de passe : </p>
-        <input type="text" name="password" value="<?php echo $mdp; ?>" >
+        <input type="password" name="password" value="<?php echo $mdp; ?>" >
         <input type="submit" value="Connexion" onClick="doChallengeResponse();" class="boutonConnexion">
     </div>
 
-    <?php//echo $_POST['reponse']." - ".$_SESSION['sql'];?>
+    <?php 
+// echo $_POST['reponse']." - ".$_SESSION['sql'];?>
     <input type="hidden" name="reponse"  value="" size=32>
 </form>
 

@@ -11,14 +11,13 @@ include_once 'inc/class.MakeLog.php';
  */
 class PDOSB {
 
-   
- // paramètres d'accès au SGBD
-    private static $serveur='mysql:host=localhost';
-    private static $bdd= 'dbname=sylvain'  ;
-    private static $user = 'sylvain' ;
-    private static $mdp= 'sylvain' ;
+    // paramètres d'accès au SGBD
+    private static $serveur = 'mysql:host=localhost';
+    private static $bdd = 'dbname=sylvain';
+    private static $user = 'sylvain';
+    private static $mdp = 'sylvain';
     // préfixe de toutes les tables
-    public static $prefixe ="SB_";
+    public static $prefixe = "SB_";
     // classe technique permettant d'accéder au SGBD
     private static $monPdo;
     // pointeur sur moi-même (pattern singleton)
@@ -32,7 +31,7 @@ class PDOSB {
      * pour toutes les méthodes de la classe
      */
     private function __construct() {
-        
+
         self::$monPdo = new PDO(self::$serveur . ';' . self::$bdd, self::$user, self::$mdp);
         self::$monPdo->query("SET CHARACTER SET utf8");
         // initialise le fichier log
@@ -69,14 +68,30 @@ class PDOSB {
      */
     public function getInfoUtil($name) {
         $sql = "select * from " . self::$prefixe . "Client  where id= ?";
-        
+
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($name));
-        $this->logSQL($sql.' ('.$name.')');
+        $this->logSQL($sql . ' (' . $name . ')');
         $ligne = $sth->fetch();
         return $ligne;
     }
+    /** renvoie les informations sur un utilisateur dont le pseudo est passé en paramètre
+     * 
+     * @param type $name : identifiant de l'utilisateur
+     * @return type toutes les informations sur un utilisateur
+     */
+    public function isSuperUser($name) {
+        $sql = "select count(*) as nb from " . self::$prefixe . "Client  where id= ? and superUser=1";
 
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($name));
+        $this->logSQL($sql . ' (' . $name . ')');
+        $ligne = $sth->fetch();
+        if ($ligne['nb'] == 1) {
+            return true;
+        }
+        return false;
+    }
     /** met à jour la dernière connexion/activité d'un utilisateur
      * 
      * @param type $num : id de l'utilisateur
@@ -86,7 +101,7 @@ class PDOSB {
         $sql = "update " . self::$prefixe . "Client set tsDerniereCx = ? where id= ?";
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($date->format('Y-m-d H:i:s'), $num));
-        $this->logSQL($sql.' ('.$num.')');
+        $this->logSQL($sql . ' (' . $num . ')');
     }
 
     /** insère un nouvel utilisateur dans la base
@@ -103,37 +118,47 @@ class PDOSB {
         return $sth;
     }
 
-   
-    
-    
-     /*
-      * Formulaire de changement de mot de passe
+    /*
+     * Formulaire de changement de mot de passe
      * Vérifie que l'e'ancien mot de passe saisi est le bon
      */
 
-    public function verifierAncienMdP($pseudo,$mdp) {
+    public function verifierAncienMdP($pseudo, $mdp) {
         $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "Client where id= ? and mdp=?";
-        $this->logSQL($sql." (".$pseudo.", ".$mdp.")");
+        $this->logSQL($sql . " (" . $pseudo . ", " . $mdp . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($pseudo,$mdp));
+        $sth->execute(array($pseudo, $mdp));
         $result = $sth->fetch();
-        $this->logSQL("===> ".$result['nb']);
+        $this->logSQL("===> " . $result['nb']);
         return $result['nb'];
     }
-    
+
     /*
      * Formulaire de changement de mot de passe
      * modifie le mot de passe
      */
 
-    public function setMdP($pseudo,$mdp,$ancien) {
+    public function setMdP($pseudo, $mdp, $ancien) {
         //$jour = new DateTime();
-        $sql = "UPDATE " . self::$prefixe . "user set mdp= ? where pseudo= ? and mdp=?";
-        $this->logSQL($sql.$pseudo." ".$mdp);
+        $sql = "UPDATE " . self::$prefixe . "Client set mdp= ? where id= ? and mdp=?";
+        $this->logSQL($sql . " (" . $pseudo . ", " . $ancien . ", " . $mdp . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($mdp,$pseudo,$ancien));
-        $result = $sth->fetch();
-        return $result;
+        $sth->execute(array($mdp, $pseudo, $ancien));
+        return $sth;
     }
+
+     /*
+     * Formulaire de modification des paramètres des clients
+     * récupère les paramètres
+     */
+    public function getParam() {
+        $sql = "SELECT * FROM " . self::$prefixe . "Param";
+        $this->logSQL($sql);
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array(null));
+        $result = $sth->fetchAll();
+        return $result;
+    }   
+    
     
 }

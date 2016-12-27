@@ -211,7 +211,11 @@ formulaire de saisie des menus
     margin:  0px 5px 0px 15px;
     width: 120px;
 }
-
+.palibel3{
+    padding-bottom: 8px; 
+    margin:  0px 5px 0px 15px;
+    width: 200px;
+}
 .pachamp{
     margin-bottom: 8px;
 }
