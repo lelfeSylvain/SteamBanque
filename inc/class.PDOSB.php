@@ -160,5 +160,24 @@ class PDOSB {
         return $result;
     }   
     
-    
+         /*
+     * Formulaire de modification des paramètres des clients
+     * modifie les paramètres
+     */
+    public function modifierLesParam($tab) {
+        foreach($tab as $key=>$value){
+            $this->modifierParam($key, $value);
+        }
+    } 
+      /*
+     * Formulaire de modification des paramètres des clients
+     * modification d'un couple (key, value)
+     */
+    public function modifierParam($key, $value) {
+        $sql = "UPDATE " . self::$prefixe . "Param set valeur=? where id=?";
+        $this->logSQL($sql. "(".$value.", ".$key.")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($value, $key));
+        return $sth;
+    }   
 }

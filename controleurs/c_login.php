@@ -4,7 +4,7 @@ if ($num === 'in') {// on se connecte
     $login = "";
     $mdp = "";
     $monFiltrePost = array( 'login'=> FILTER_SANITIZE_STRING, 'reponse'=> FILTER_SANITIZE_STRING,'password'=> FILTER_SANITIZE_STRING);
-    $monPost =     filter_input_array(INPUT_POST,$monFiltrePost);
+    $monPost = filter_input_array(INPUT_POST,$monFiltrePost);
     //var_dump($monPost);
     if ($monPost !== null && $monPost['login'] !== false && $monPost['password'] !== false) {
     

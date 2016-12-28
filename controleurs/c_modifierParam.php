@@ -17,9 +17,14 @@ if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
             }
             $tabFiltre[$key] = $filtre;
         }
-        $monFiltrePost = array('value' => $tabFiltre);
-        
-        $monPost = filter_input_array(INPUT_POST, $monFiltrePost);
+        $mesPost = filter_input_array(INPUT_POST, $tabFiltre);
+        // $mesPost est un tableau associatif contenant les nouvelles valeurs des paramètres
+        if (! $pdo->modifierLesParam($mesPost)) { // on reporte ces modifications dans la BD
+            $textNav="Modifications effectuées";
+        }
+        else {
+            $textNav="Problème avec la BD dans l'enregistrement des paramètres par défaut.";
+        }
     }
     $lesParam = $pdo->getParam();
     include("vues/v_modifierParam.php");

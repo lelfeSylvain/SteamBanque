@@ -3,12 +3,12 @@ Modifier les paramètres des clients</div>
 </header>
 <p><?php
     if ("check" === $num) {
-        var_dump($monFiltrePost);
+        /*var_dump($tabFiltre);
         echo EOL;
         var_dump($_POST);
         echo EOL;
-        var_dump($monPost);echo EOL;echo $monPost['value'][0].EOL;
-        echo $textnav;
+        var_dump($mesPost);echo EOL;echo $mesPost[0].EOL;*/
+        echo $textNav;
         echo "</p><p>";
     } 
 
@@ -22,7 +22,7 @@ Modifier les paramètres des clients</div>
         ?>
         <div class='formulaireLigneChamp'>
             <p class="palibel3"><?php echo $key; ?>  :</p>
-            <input type="text" name="value[<?php echo $key; ?>]" value="<?php echo $value; ?>">
+            <input type="text" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
         </div>
         <?php 
         

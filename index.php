@@ -2,7 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
- * temps écoulé = 10h30
+ * temps écoulé = 11h30
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
@@ -12,6 +12,7 @@ require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions util
  */
 $monFiltreGet = array('uc' => FILTER_SANITIZE_STRING, 'num' => FILTER_SANITIZE_STRING);
 $monGet = filter_input_array(INPUT_GET, $monFiltreGet);
+
 if ($monGet === null or $monGet['uc'] === false) {//s'il n'y a pas d'uc alors on initie le comportement par défaut
     $uc = 'defaut';
     $num = 'actuelle';
