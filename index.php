@@ -2,7 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
- * temps écoulé = 11h30
+ * temps écoulé = 15h30
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
@@ -57,11 +57,15 @@ elseif (!Session::isLogged()) {
             include("controleurs/c_modifierClient.php");
             break;
         }
+        case 'modifierMdPClient':{ // modifier un nouvel utilisateur (seulement SUser)
+            include("controleurs/c_modifierMdPClient.php");
+            break;
+        }
         case 'modifierParam':{ // modifier les paramètres de l'application (seulement SUser)
             include("controleurs/c_modifierParam.php");
             break;
         }
-        case 'changer': {// uc modification du mot de passe
+        case 'changerMdP': {// uc modification du mot de passe
                 include("controleurs/c_changerMDP.php");
                 break;
             }

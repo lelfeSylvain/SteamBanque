@@ -11,13 +11,25 @@ function doChallengeResponse() {
 
 /*
  * converti le mot de passe saisi en mot de passe crypté
- * dans le formulaire login
+ * dans le formulaire de changement de mot de passe
  */
 function encodeMDPenMD5() {
     var ancien = document.getElementById('ancien');
     var nouveau = document.getElementById('nouveau');
     var confirmation = document.getElementById('confirmation');
     ancien.value = MD5("$r1#qF@" +ancien.value);
+    nouveau.value = MD5("$r1#qF@" +nouveau.value);
+    confirmation.value = MD5("$r1#qF@" +confirmation.value);
+
+}
+
+/*
+ * converti le mot de passe saisi en mot de passe crypté
+ * dans le formulaire de creation d'utilisateur
+ */
+function encodeMDPenMD5_NouveauUtil() {
+    var nouveau = document.getElementById('nouveau');
+    var confirmation = document.getElementById('confirmation');
     nouveau.value = MD5("$r1#qF@" +nouveau.value);
     confirmation.value = MD5("$r1#qF@" +confirmation.value);
 

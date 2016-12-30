@@ -75,6 +75,25 @@ class PDOSB {
         $ligne = $sth->fetch();
         return $ligne;
     }
+
+    /** renvoie les id, nom et prenom de tous les clients
+     * 
+     * @param type $name : identifiant de l'utilisateur
+     * @return id, nom et prenom de tous les clients
+     */
+    public function getLesClients($idSU = null) {
+        if ($idSU === null) {
+            $sql = "select id, nom ,prenom from " . self::$prefixe . "Client order by 2, 3 ";
+        } else {
+            $sql = "select id, nom ,prenom from " . self::$prefixe . "Client where id <> ? order by 2, 3 ";
+        }
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idSU));
+        $this->logSQL($sql);
+        $ligne = $sth->fetchAll();
+        return $ligne;
+    }
+
     /** renvoie les informations sur un utilisateur dont le pseudo est passé en paramètre
      * 
      * @param type $name : identifiant de l'utilisateur
@@ -92,6 +111,7 @@ class PDOSB {
         }
         return false;
     }
+
     /** met à jour la dernière connexion/activité d'un utilisateur
      * 
      * @param type $num : id de l'utilisateur
@@ -105,16 +125,32 @@ class PDOSB {
     }
 
     /** insère un nouvel utilisateur dans la base
-     * 
+     * par défaut ce n'est pas un super user
      */
-    // TODO : Pour le moment, on ajoute que le pseudo et le mdp
-    // il faut aussi enregistrer les autres propriétés
-    public function setNouveauUtil($pseudo, $mdp) {
-        $sql = "insert into " . self::$prefixe . "Client (id, mdp) values ('" . $pseudo . "','" . $mdp . "')";
-        $this->logSQL($sql);
-        $sql = "insert into " . self::$prefixe . "Client (id, mdp) values (?,?)";
+    public function setNouveauUtil($pseudo, $mdp, $prenom, $nom, $estSU = 0) {
+        if ($estSU === 1) {
+            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom,superUser) values (?,?,?,?,1)";
+        } else {
+            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom) values (?,?,?,?)";
+        }
+        $this->logSQL($sql . " (" . $pseudo . ", " . $mdp . ", " . $prenom . ", " . $nom . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($pseudo, $mdp));
+        $sth->execute(array($pseudo, $mdp, $prenom, $nom));
+        return $sth;
+    }
+
+    /** modifie un utilisateur dans la base
+     * par défaut ce n'est pas un super user
+     */
+    public function updateUtil($pseudo, $prenom, $nom, $estSU = 0) {
+        if ($estSU === 1) {
+            $sql = "update " . self::$prefixe . "Client set prenom = ?, nom= ?, superUser= 1 where id= ?";
+        } else {
+            $sql = "update " . self::$prefixe . "Client set prenom = ?, nom= ? where id= ?";
+        }
+        $this->logSQL($sql . " (" . $prenom . ", " . $nom . ", " . $pseudo . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($prenom, $nom, $pseudo));
         return $sth;
     }
 
@@ -138,19 +174,25 @@ class PDOSB {
      * modifie le mot de passe
      */
 
-    public function setMdP($pseudo, $mdp, $ancien) {
-        //$jour = new DateTime();
-        $sql = "UPDATE " . self::$prefixe . "Client set mdp= ? where id= ? and mdp=?";
-        $this->logSQL($sql . " (" . $pseudo . ", " . $ancien . ", " . $mdp . ")");
+    public function setMdP($pseudo, $mdp, $ancien = null) {
+        if (null === $ancien) {
+            $sql = "UPDATE " . self::$prefixe . "Client set mdp= ? where id= ?";
+            $parametres = array($mdp, $pseudo);
+        } else {
+            $sql = "UPDATE " . self::$prefixe . "Client set mdp= ? where id= ? and mdp=?";
+            $parametres = array($mdp, $pseudo, $ancien);
+        }
+        $this->logSQL($sql . " (" . $mdp . ", " . $pseudo . ", " . $ancien . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($mdp, $pseudo, $ancien));
+        $sth->execute($parametres);
         return $sth;
     }
 
-     /*
+    /*
      * Formulaire de modification des paramètres des clients
      * récupère les paramètres
      */
+
     public function getParam() {
         $sql = "SELECT * FROM " . self::$prefixe . "Param";
         $this->logSQL($sql);
@@ -158,26 +200,30 @@ class PDOSB {
         $sth->execute(array(null));
         $result = $sth->fetchAll();
         return $result;
-    }   
-    
-         /*
+    }
+
+    /*
      * Formulaire de modification des paramètres des clients
      * modifie les paramètres
      */
+
     public function modifierLesParam($tab) {
-        foreach($tab as $key=>$value){
+        foreach ($tab as $key => $value) {
             $this->modifierParam($key, $value);
         }
-    } 
-      /*
+    }
+
+    /*
      * Formulaire de modification des paramètres des clients
      * modification d'un couple (key, value)
      */
+
     public function modifierParam($key, $value) {
         $sql = "UPDATE " . self::$prefixe . "Param set valeur=? where id=?";
-        $this->logSQL($sql. "(".$value.", ".$key.")");
+        $this->logSQL($sql . "(" . $value . ", " . $key . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($value, $key));
         return $sth;
-    }   
+    }
+
 }
