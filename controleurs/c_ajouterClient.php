@@ -20,9 +20,11 @@ if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
         // 
         // $mesPost est un tableau associatif contenant les nouvelles valeurs filtrées
         if ($enregistrementOK !== null) { // on reporte ces modifications dans la BD
-            $textNav = "Nouveau client créé";
+            $numCompte=$pdo->creerCompteClient($mesPost['id']);
+            $res=$pdo->initialiserCompteClient($mesPost['id'],$numCompte);
+            $textNav = "Nouveau client ".$mesPost['id']." créé, avec le compte ".$mesPost['id']."-".$numCompte;
         } else {
-            $textNav = "Problème avec la BD dans l'enregistrement du nouveau client.";
+            $textNav = "Problème avec la BD dans l'enregistrement du nouveau client. Le compte n'a pas été créé";
         }
     }
     include("vues/v_ajouterClient.php");

@@ -226,4 +226,95 @@ class PDOSB {
         return $sth;
     }
 
+     /*
+     * Formulaire de création de nouveaux clients
+     * Création d'un compte client supplémentaire
+     */
+
+    public function creerCompteClient($id) {
+        $num= ((int) $this->getMaxNumCompteClient($id) )+1;
+        $valDecouvert = $this->getValDefaut("decouvertAutoriseDefaut");
+        $sql = "insert into ".self::$prefixe."Compte (num, idcli,`maxDecouvert`) value (?,?,?)";
+        $this->logSQL($sql . "(" . $num . ", " . $id .  ", " . $valDecouvert . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($num,$id,$valDecouvert));
+        
+        return $num;
+    }
+    
+     /*
+     * Formulaire de création de nouveaux clients
+     * Renvoie le numéro le plus grand pour un comte client, sinon renvoie la valeur par défaut (cf. table param)
+     */
+
+    public function getMaxNumCompteClient($id) {
+        
+        $sql = "SELECT max(num) FROM " . self::$prefixe . "Compte where `idCli`=?";
+        $this->logSQL($sql . "(" . $id . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($id));
+        $ligne = $sth->fetch();
+        if ($ligne['num']=== null) { return $this->getValDefaut("numCompteClient"); }
+        else return $ligne['num'];
+    }
+    
+    /*
+     * Formulaire de création de nouveaux clients
+     * Renvoie la valeur par défaut (cf. table param) d'un paramètre 
+     */
+
+    public function getValDefaut($idParam) {
+        
+        $sql = "SELECT valeur FROM " . self::$prefixe . "Param where `id`=?";
+        $this->logSQL($sql. "(" . $idParam . ")" );
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idParam));
+        $ligne = $sth->fetch();
+         return $ligne['valeur'];
+    }
+    
+         /*
+     * Formulaire de création de nouveaux clients
+     * Initialisation d'un compte client 
+     */
+
+    public function initialiserCompteClient($idCli, $idCompte) {
+        $num= 0;
+        $montant = $this->getValDefaut("valInitialeCompteClient");
+        $idTiers= $this->getValDefaut("clientTiersFictif");
+        $numTiers= $this->getValDefaut("compteTiersFictif");
+        return $this->mouvementCompteClient($idCli, $idCompte, $montant, $idTiers, $numTiers, $num);
+    }
+    
+    /*
+     * Formulaire de création de nouveaux clients
+     * Passer un mouvement entre compte
+     */
+
+    public function mouvementCompteClient($idCli, $idCompte, $montant, $idTiers, $numTiers,$numMouvement=null) {
+       if ($numMouvement===null) {
+           $numMouvement = $this->getProchainNumMouvement($idCli, $idCompte);
+       }
+        $sql = "insert into ".self::$prefixe."Mouvement (idCli,numCpt, num,montant,idTiers, numTiers) value (?,?,?,?,?,?)";
+        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte.  ", " .  $numMouvement .  ", ". $montant .  ", " .$idTiers.  ", ". $numTiers. ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idCli, $idCompte,$numMouvement, $montant, $idTiers, $numTiers));
+        
+        return $sth;
+    }
+    /*
+     * Formulaire de création de nouveaux clients
+     * Renvoie le prochain numéro du mouvement pour le compte ciblé
+     */
+
+    public function getProchainNumMouvement($idCli, $idCompte) {
+        
+        $sql = "SELECT max(num)+1 FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=?";
+        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idCli, $idCompte));
+        $ligne = $sth->fetch();
+        return $ligne['num'];
+    }
+    
 }

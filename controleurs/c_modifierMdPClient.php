@@ -1,7 +1,6 @@
 <?php
 
 $textNav = "";
-// TODO ici il faut modifier le get et le check, check2.
 if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
     $titre = "Changer le mot de passe d'un client";
     $cible = "modifierMdPClient";
@@ -25,6 +24,7 @@ if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
         } else {
             $textNav = "Problème avec la BD dans la modification du client.";
         }
+        include("controleurs/c_accueil.php");
     } else { // premier passage
         $lesClients = $pdo->getLesClients($_SESSION['id']);
 
