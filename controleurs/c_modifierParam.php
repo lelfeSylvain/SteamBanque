@@ -4,7 +4,7 @@ if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
     $lesParam = $pdo->getParam();
     if ("check" === $num) {// on récupère les POST
         $tabFiltre = array();
-        foreach ($lesParam as list($key, $val, $monFiltre)) {
+        foreach ($lesParam as list($key, $val, $monFiltre,$comment)) {
             if ("entier positif" === $monFiltre) {
                 $filtre = array(
                     'filter' => FILTER_VALIDATE_INT, // entier

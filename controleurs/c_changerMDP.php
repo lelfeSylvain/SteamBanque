@@ -24,10 +24,10 @@ if ($num === 'check') {// on récupère les données saisies
         $nbrErreurs = 0;
         foreach ($optionsFiltre as $cle => $valeur) { //Parcourir tous les champs voulus.
             if ($resultat[$cle] === null) { //Si le champ est vide.
-                $texteNav = 'Veuillez remplir le champ ' . $cle . '.<br/>';
+                $texteNav = 'Veuillez remplir le champ ' . $cle . EOL;
                 $nbrErreurs++;
             } elseif ($resultat[$cle] === false) { //S'il n'est pas valide.
-                $texteNav = $messageErreur[$cle] . '<br/>';
+                $texteNav = $messageErreur[$cle] . EOL;
                 $nbrErreurs++;
             }
         }

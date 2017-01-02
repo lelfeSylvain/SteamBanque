@@ -156,7 +156,7 @@ class PDOSB {
 
     /*
      * Formulaire de changement de mot de passe
-     * Vérifie que l'e'ancien mot de passe saisi est le bon
+     * Vérifie que l'ancien mot de passe saisi est le bon
      */
 
     public function verifierAncienMdP($pseudo, $mdp) {
@@ -309,12 +309,12 @@ class PDOSB {
 
     public function getProchainNumMouvement($idCli, $idCompte) {
         
-        $sql = "SELECT max(num)+1 FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=?";
+        $sql = "SELECT max(num)+1 as n FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=?";
         $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli, $idCompte));
         $ligne = $sth->fetch();
-        return $ligne['num'];
+        return $ligne['n'];
     }
     
     /*
@@ -347,5 +347,19 @@ class PDOSB {
         $sth->execute(array($idCli, $idCompte));
         $ligne = $sth->fetch();
         return $ligne['solde'];
+    }
+    
+        /*
+     * Formulaire de visualisation des  clients
+     * Renvoie la valeur de l'autorisation de découvert du compte ciblé
+     */
+
+    public function getDecouvert($idCli, $idCompte) {
+        $sql = "SELECT maxDecouvert FROM " . self::$prefixe . "Compte where `idCli`=? and num=?";
+        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idCli, $idCompte));
+        $ligne = $sth->fetch();
+        return $ligne['maxDecouvert'];
     }
 }
