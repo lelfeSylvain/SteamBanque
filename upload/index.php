@@ -2,7 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
- * temps écoulé = 21h30
+ * temps écoulé = 20h20
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
