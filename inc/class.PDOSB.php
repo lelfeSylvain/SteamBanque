@@ -48,7 +48,7 @@ class PDOSB {
      * @return l'unique objet de la classe PdoSB
      */
     public static function getPdoSB() {
-        if (self::$moi === null) {
+        if (null===self::$moi ) {
             self::$moi = new PDOSB();
         }
         return self::$moi;
@@ -82,7 +82,7 @@ class PDOSB {
      * @return id, nom et prenom de tous les clients
      */
     public function getLesClients($idSU = null) {
-        if ($idSU === null) {
+        if (null===$idSU ) {
             $sql = "select id, nom ,prenom from " . self::$prefixe . "Client order by 2, 3 ";
         } else {
             $sql = "select id, nom ,prenom from " . self::$prefixe . "Client where id <> ? order by 2, 3 ";
@@ -128,7 +128,7 @@ class PDOSB {
      * par défaut ce n'est pas un super user
      */
     public function setNouveauUtil($pseudo, $mdp, $prenom, $nom, $estSU = 0) {
-        if ($estSU === 1) {
+        if (1===$estSU ) {
             $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom,superUser) values (?,?,?,?,1)";
         } else {
             $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom) values (?,?,?,?)";
@@ -143,7 +143,7 @@ class PDOSB {
      * par défaut ce n'est pas un super user
      */
     public function updateUtil($pseudo, $prenom, $nom, $estSU = 0) {
-        if ($estSU === 1) {
+        if (1===$estSU ) {
             $sql = "update " . self::$prefixe . "Client set prenom = ?, nom= ?, superUser= 1 where id= ?";
         } else {
             $sql = "update " . self::$prefixe . "Client set prenom = ?, nom= ? where id= ?";
@@ -292,7 +292,7 @@ class PDOSB {
      */
 
     public function mouvementCompteClient($idCli, $idCompte, $montant, $idTiers, $numTiers,$numMouvement=null) {
-       if ($numMouvement===null) {
+       if (null===$numMouvement) {
            $numMouvement = $this->getProchainNumMouvement($idCli, $idCompte);
        }
         $sql = "insert into ".self::$prefixe."Mouvement (idCli,numCpt, num,montant,idTiers, numTiers) value (?,?,?,?,?,?)";
@@ -317,4 +317,35 @@ class PDOSB {
         return $ligne['num'];
     }
     
+    /*
+     * Formulaire de visualisation des  clients
+     * Renvoie les nb dernières opérations du compte ciblé
+     * NB renvoie les opérations triées à rebours
+     */
+
+    public function getDernieresOperations($idCli, $idCompte, $nb=null) {
+        if (null===$nb) {
+            $nb = $this->getValDefaut("nbLigneAffiche");
+        }
+        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=? order by ts desc limit ".$nb;
+        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idCli, $idCompte));
+        $ligne = $sth->fetchAll();
+        return $ligne;
+    }
+    
+    /*
+     * Formulaire de visualisation des  clients
+     * Renvoie le solde du compte ciblé
+     */
+
+    public function getSolde($idCli, $idCompte) {
+        $sql = "SELECT sum(montant) as solde FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=?";
+        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($idCli, $idCompte));
+        $ligne = $sth->fetch();
+        return $ligne['solde'];
+    }
 }

@@ -2,7 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
- * temps écoulé = 15h30
+ * temps écoulé = 19h00
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
@@ -41,14 +41,6 @@ elseif (!Session::isLogged()) {
     //aiguillage principal
     //echo '**************' . $uc . "  -  " . $num . EOL;
     switch ($uc) {
-        /* case 'lecture': {// uc lecture du menu 
-          include("controleurs/c_semaine.php");
-          break;
-          } */
-        /* case 'ecrire': {// uc création d'un repas
-          include("controleurs/c_creation.php");
-          break;
-          } */
         case 'ajouterClient':{ // créer un nouvel utilisateur (seulement SUser)
             include("controleurs/c_ajouterClient.php");
             break;
@@ -69,6 +61,10 @@ elseif (!Session::isLogged()) {
                 include("controleurs/c_changerMDP.php");
                 break;
             }
+        case 'transaction':{ // modifier les paramètres de l'application (seulement SUser)
+            include("controleurs/c_transaction.php");
+            break;
+        }
         case 'defaut' :;
         default :  // par défaut on consulte les posts
             include("controleurs/c_accueil.php");

@@ -13,12 +13,10 @@ $pdo = PDOSB::getPdoSB();
 $tabJour = array("lundi ", "mardi ", "mercredi ", "jeudi ", "vendredi ");
 $tabMois = array("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
 $_SESSION['debug'] = "hidden";
+$_SESSION['symbole'] = $pdo->getValDefaut("symboleMonnaie");
+$_SESSION['monnaie'] = $pdo->getValDefaut("libelleDeLaMonnaie");
+$_SESSION['fictif']  = $pdo->getValDefaut("clientTiersFictif");
 
-// TODO effacer le mode debug
-//$_SESSION['debug']="text";
-// instanciation de la fabrique de vue
-//$vue = FabriqueVue::getFabrique();
-//print_r ($_REQUEST);
 
 function clean($texte) {
     return (htmlspecialchars(trim($texte)));
