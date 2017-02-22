@@ -37,41 +37,6 @@ cette ligne est répétée 5 fois */
 .jour.smallscreen {
     display :  none;
 }
-/* les types des cases menus*/
-.midi.tantot {
-    background-color: lightgoldenrodyellow; 
-    width: 40%;
-    color: chocolate; 
-    background-repeat:no-repeat;
-    background-image : url(../images/sun2.png);
-    background-position:115% -120%;
-}
-.soir.tantot {
-    width: 60%;
-    background-repeat:no-repeat;
-    background-image : url(../images/moon1.png);
-    background-position:108% 50%;
-}
-
-.midi.matin {
-    background-color: lightgoldenrodyellow; 
-    width: 60%;
-    color: chocolate; 
-    background-repeat:no-repeat;
-    background-image : url(../images/sun.png);
-    background-position:110% 90%;
-}
-.soir.matin {
-    width: 40%;
-    background-repeat:no-repeat;
-    background-image : url(../images/moon2.png);
-    background-position:102% 50%;
-}
-
-.unecase.soir.num9 {
-    background-image : url(../images/logosansfond.png);
-    background-position:100% 0%;
-}
 
 /* pour la saisie des menus */
 .midi.saisi {
@@ -111,10 +76,17 @@ cette ligne est répétée 5 fois */
     background-color:  grey;
     color:black;
     width: 80%;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
+.formulaireCourt {
+    background-color:  grey;
+    color:black;
+    width: 40%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
 /************************************************************************
 formulaire de saisie des menus
@@ -197,9 +169,6 @@ formulaire de saisie des menus
     justify-content:center;
 
 }
-.formulaireBoutonRepas{
-
-}
 
 .palibel{
     padding-bottom: 8px; 
@@ -233,7 +202,7 @@ Formulaire changement de mot de passe
  ************************************************************************/
 
 .formulaireLigneDesc {
-     margin:  3px 10px 5px 10px;
+    margin:  3px 10px 5px 10px;
 }
 .large{
     width: 200px;
@@ -256,7 +225,8 @@ Formulaire changement de mot de passe
 }
 
 .boutonChanger {
-    margin-left: 450px;
+    display : flex;
+    justify-content: space-around;
 }
 /************************************************************************
 navigation du menu
@@ -294,10 +264,10 @@ footer {
     flex-flow : column wrap-reverse;
     justify-content:  flex-end;
     margin-right: 5px;
-    
-    
 
-    
+
+
+
 }
 
 footer>nav {
@@ -315,4 +285,23 @@ div.pied {
 
 div.pied>p {
     margin : 0px;
+}
+
+/* ******************************************************* 
+  SteamBanque :   affichage de l'historique des comptes
+********************************************************** */
+
+.tdate {
+    font-size : 0.8em;
+}
+
+.tlib {
+    padding: 0 0 0 10px ;
+    font-size : 1em;
+}
+
+.tmontant {
+    font-size : 1em;
+    text-align: right;
+    padding: 0 0 0 10px ;
 }

@@ -2,7 +2,7 @@
 
 </header>
 <?php
-echo $texteNav;
+echo $textNav;
 ?>
 <form method="post" action="index.php?uc=<?php echo $cible; ?>&num=check" id='chgMDP' class="formulaire" onsubmit="encodeMDPenMD5()" >
     <div class='formulaireLigneDesc'>               
@@ -18,16 +18,16 @@ echo $texteNav;
         }
         ?>
         Un bon mot de passe comporte au moins 8 caractères, n'est ni une date, n'est ni un 
-        nom commun, ni un nom propre. En outre, il doit contenir au moins une majuscule, au moins un minuscule, au moins un chiffre et au moins un symbole.
+        nom commun, ni un nom propre. En outre, les caractères utilisés doivent appartenir à <?php echo $_SESSION['regex']; ?>.
     </div>
     <div class='formulaireLigneChamp'>
         <p class="palibel large">Nouveau mot de passe*  :</p>
-        <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[&#-_@=+*/?.!$<>]).{8,30}$">
-        <label class="">caractères autorisés (A-Z a-z 0-9 &#-_@=+*/?.!$><)</label>
+        <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">
+        <label class="">caractères autorisés (<?php echo $_SESSION['commentaireRegex']; ?>)</label>
     </div>
     <div class='formulaireLigneChamp'>
         <p class="palibel large">Confirmation* : </p>
-        <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[&#-_@=+*/?.!$<>]).{8,30}$">        
+        <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">        
         <label id="msg"></label>
     </div>
 <?php if ("changerMdP" === $cible) { ?>

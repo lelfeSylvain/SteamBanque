@@ -2,12 +2,13 @@ Accueil</div>
 
 </header>
 <p>
+    <?php echo $textNav; ?>
+</p>
+<p>
+    Bienvenue M. 
     <?php
-    echo $textNav;
-    echo "</p><p>";
-    echo $_SESSION['pseudo'];
-    ?>
-    Bienvenue sur notre banque en ligne
+        echo $_SESSION['pseudo'].EOL;
+    ?>    
 </p>
 <?php
 if ($estSU) {// superUtilisateur
@@ -22,33 +23,10 @@ if ($estSU) {// superUtilisateur
     </p>
     <?php
 } else {// client 
-    echo "<p> Votre solde est ";
-    if ($solde < 0) {
-        echo "débiteur de ";
-    } else {
-        echo "créditeur de ";
-    }
-    echo $solde . " " . $_SESSION['symbole'] . EOL;
-    $text = "";
-    foreach ($lesDernieresOperations as $uneOp) {
-        if ($uneOp['idTiers'] === $_SESSION['fictif']) {
-            $sens = " Solde initiale : ";
-        } else {
-            if (0 > $uneOp['montant']) {
-                $sens = " à destination du compte N° " . $uneOp['idTiers'] . "-" . $uneOp['numTiers'];
-            } else {
-                $sens = " en provenance du compte N° " . $uneOp['idTiers'] . "-" . $uneOp['numTiers'];
-            }
-        }
-        $ligne = $uneOp['ts'] . $sens . " " . $uneOp['montant'] . " " . $_SESSION['symbole'] . EOL;
-        $text = $ligne . $text;
-    }
-    echo $text;
-    ?>
-    <p> Vous pouvez : 
-        <ul>
-            <li><a href='index.php?uc=transaction&num=in' >Effectuer une transaction vers un tiers</a></li>
-        </ul>
-    </p>
-<?php } ?>
+    include('vues/v_clientTransactionCourt.php');
+    include('vues/v_clientHistorique.php');
+    include('vues/v_clientDeconnexion.php');
+  ?>  
+   
+<?php } 
 

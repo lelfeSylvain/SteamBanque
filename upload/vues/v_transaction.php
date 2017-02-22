@@ -4,7 +4,7 @@ Transaction vers un tiers</div>
 <p><?php
     if ("check" === $num) {
         var_dump($_POST);
-        echo $texteNav;
+        echo $textNav;
         echo "</p><p>";
     }
     ?>

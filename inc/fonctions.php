@@ -3,8 +3,7 @@
 require_once 'inc/class.Session.php';
 Session::init();
 require_once 'inc/class.PDOSB.php';
-$_GLOBAL['titre'] = "Steam-Banque";
-include 'vues/v_entete.php';
+
 // constantes 
 define("EOL", "<br />\n"); // fin de ligne html et saut de ligne
 define("EL", "\n"); //  saut de ligne 
@@ -15,16 +14,30 @@ $tabMois = array("janvier", "février", "mars", "avril", "mai", "juin", "juillet
 $_SESSION['debug'] = "hidden";
 $_SESSION['symbole'] = $pdo->getValDefaut("symboleMonnaie");
 $_SESSION['monnaie'] = $pdo->getValDefaut("libelleDeLaMonnaie");
+$_SESSION['numMinCompteClient']  = $pdo->getValDefaut("numCompteClient");
+$_SESSION['maxCompteParClient']  = $pdo->getValDefaut("maxCompteParClient");
 $_SESSION['fictif']  = $pdo->getValDefaut("clientTiersFictif");
+$_SESSION['affichageChronologique']  = $pdo->getValDefaut("affichageChronologique");
+$filtreminmax  = array($pdo->getValDefaut("longueurMini"), $pdo->getValDefaut("longueurMaxi"));
+
+$_SESSION['regex']  = str_replace(array("%min%","%max%"), $filtreminmax, $pdo->getValDefaut("regexMDP"));
+$_SESSION['commentaireRegex']  = $pdo->getValDefaut("commentaireRegex");
+unset($filtreminmax);
 
 
+$_GLOBAL['titre']  = $pdo->getValDefaut("TitreApplication");
+
+// Affichage de l'entete à tous les pages
+include 'vues/v_entete.php';
+
+/*obsolète
 function clean($texte) {
     return (htmlspecialchars(trim($texte)));
 }
 
 function cleanaff($texte) {//utf8_decode
     return stripslashes(htmlspecialchars(trim($texte)));
-}
+}*/
 
 /*
  * déconnecte l'utilisateur et redirige le traitement sur la page menu

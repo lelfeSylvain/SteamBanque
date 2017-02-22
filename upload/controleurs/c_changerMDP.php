@@ -3,7 +3,7 @@
 /*
  * Controleur pour gérer la modification du mot de passe
  */
-$texteNav = "";
+$textNav = "";
 if ($num === 'check') {// on récupère les données saisies
     $ancien = "";
     $nouveau = "";
@@ -24,10 +24,10 @@ if ($num === 'check') {// on récupère les données saisies
         $nbrErreurs = 0;
         foreach ($optionsFiltre as $cle => $valeur) { //Parcourir tous les champs voulus.
             if ($resultat[$cle] === null) { //Si le champ est vide.
-                $texteNav = 'Veuillez remplir le champ ' . $cle . EOL;
+                $textNav = 'Veuillez remplir le champ ' . $cle . EOL;
                 $nbrErreurs++;
             } elseif ($resultat[$cle] === false) { //S'il n'est pas valide.
-                $texteNav = $messageErreur[$cle] . EOL;
+                $textNav = $messageErreur[$cle] . EOL;
                 $nbrErreurs++;
             }
         }
@@ -37,17 +37,17 @@ if ($num === 'check') {// on récupère les données saisies
                 if (1 === ((int) $pdo->verifierAncienMdP($_SESSION['id'], $resultat['ancien']))) {//le mot de passe saisi est le bon
                     $resultSetMdP = $pdo->setMdP($_SESSION['id'], $resultat['nouveau'], $resultat['ancien']);
                     if ($resultSetMdP === false) {
-                        $texteNav = "Problème BD : Le mot de passe n'a pas été mis à jour.";
+                        $textNav = "Problème BD : Le mot de passe n'a pas été mis à jour.";
                     } else {
-                        $texteNav = "Le mot de passe a été mis à jour.";
+                        $textNav = "Le mot de passe a été mis à jour.";
                     }
                 } else { // ancien mdp saisi incorrecte
-                    $texteNav = "L'ancien mot de passe n'est pas le bon.";
+                    $textNav = "L'ancien mot de passe n'est pas le bon.";
                 }
             }
         }
     } else {
-        $texteNav = 'Vous n\'avez rien posté.';
+        $textNav = 'Vous n\'avez rien posté.';
     }
 }
 $titre = "Changer votre mot de passe";

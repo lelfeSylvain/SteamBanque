@@ -1,5 +1,5 @@
 <?php
-$texteNav="";
+$textNav="";
 if ($num === 'in') {// on se connecte
     $login = "";
     $mdp = "";
@@ -20,14 +20,14 @@ if ($num === 'in') {// on se connecte
                 if ($login === "debug") $_SESSION['debug'] = "text" ;
                 $_SESSION['tsDerniereCx'] = $rep['tsDerniereCx'];
                 $_SESSION['id'] = $rep['id'];
-                $texteNav="Vous êtes connecté.".EOL;
+                $textNav="Vous êtes connecté.".EOL;
                 $pdo->setDerniereCx($rep['id']);
                 header('Location: index.php?uc=lecture&num=actuelle');
             } else {// mauvais mot de passe ?
-                $texteNav= "Connexion refusée".EOL;
+                $textNav= "Connexion refusée".EOL;
             }
         } else {// utilisateur inconnu
-                $texteNav=  "Connexion refusée".EOL;
+                $textNav=  "Connexion refusée".EOL;
             }
     } else {
         // première connexion
@@ -35,6 +35,6 @@ if ($num === 'in') {// on se connecte
 }
 else /*($num === 'out')*/ {
     logout();
-    $texteNav="Vous n'êtes pas connecté.".EOL;
+    $textNav="Vous n'êtes pas connecté.".EOL;
 } 
 include('vues/v_login.php');

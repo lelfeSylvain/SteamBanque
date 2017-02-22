@@ -2,7 +2,7 @@
 
 </header>
 <?php
-echo $texteNav;
+echo $textNav;
 ?>
 <form method="post" action="index.php?uc=<?php echo $cible; ?>&num=check" id='chgMDP' class="formulaire" onsubmit="encodeMDPenMD5()" >
     <div class='formulaireLigneDesc'>               

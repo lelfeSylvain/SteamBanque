@@ -74,25 +74,29 @@ if ("check" === $num) {// on récupère les POST des champs de saisie
         $nbrErreurs = 0;
         foreach ($tabFiltre as $cle => $valeur) { //Parcourir tous les champs voulus.
             if ($resultat[$cle] === null) { //Si le champ est vide.
-                $texteNav = 'Veuillez remplir le champ ' . $cle . EOL;
+                $textNav = 'Veuillez remplir le champ ' . $cle . EOL;
                 $nbrErreurs++;
             } elseif ($resultat[$cle] === false) { //S'il n'est pas valide.
-                $texteNav = $messageErreur[$cle] . EOL;
+                $textNav = $messageErreur[$cle] . EOL;
                 $nbrErreurs++;
             }
         }
 
         if ($nbrErreurs == 0) {
             if ($_SESSION['id'] == $resultat['idTiers'] and $_SESSION['numCompte'] == $resultat['numTiers']) {
-                $texteNav = "Le compte tiers est le même que le votre. Transaction annulée".EOL;
+                $textNav = "Le compte tiers est le même que le votre. Transaction annulée" . EOL;
             } else {
                 $pdo->mouvementCompteClient($_SESSION['id'], $_SESSION['numCompte'], -$resultat['montant'], $resultat['idTiers'], $resultat['numTiers']);
                 $pdo->mouvementCompteClient($resultat['idTiers'], $resultat['numTiers'], $resultat['montant'], $_SESSION['id'], $_SESSION['numCompte']);
-                $texteNav = "Transaction effectué";
+                $textNav = "Transaction effectué";
             }
         }
     } else {
-        $texteNav = "Vous n'avez rien posté.";
+        $textNav = "Vous n'avez rien posté.";
     }
 }
-include('vues/v_transaction.php');
+if ($estSU) {
+    include('vues/v_transaction.php');
+} else {
+    include('controleurs/c_accueil.php');
+}
