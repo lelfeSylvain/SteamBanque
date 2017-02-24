@@ -18,7 +18,7 @@ echo $textNav;
         }
         ?>
         Un bon mot de passe comporte au moins 8 caractères, n'est ni une date, n'est ni un 
-        nom commun, ni un nom propre. En outre, les caractères utilisés doivent appartenir à <?php echo $_SESSION['regex']; ?>.
+        nom commun, ni un nom propre. En outre, les caractères utilisés doivent appartenir à <?php echo $_SESSION['commentaireRegex']; ?>.
     </div>
     <div class='formulaireLigneChamp'>
         <p class="palibel large">Nouveau mot de passe*  :</p>

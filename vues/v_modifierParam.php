@@ -18,11 +18,27 @@ Modifier les paramètres des clients</div>
         Les Paramètres :
     </div>
     <?php
-    foreach($lesParam as list($key , $value, $filtre,$comment)) {
+    $ancienneRubrique="";
+    foreach($lesParam as list($key , $value, $filtre,$comment, $rubrique)) {
+        if ("entier positif"===$filtre) {
+            $type="number";
+        }
+        else {
+            $type="text";
+        }
+            
+        if ($rubrique !== $ancienneRubrique) {
+            $ancienneRubrique = $rubrique;
+            ?>
+            <div class='formulaireLigneRadio'>               
+                <?php   echo $rubrique;    ?>
+            </div>
+        <?php    
+        }
         ?>
         <div class='formulaireLigneChamp'>
             <p class="palibel3 "><?php echo $key; ?>  :</p>
-            <input type="text" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
+            <input type="<?php echo $type; ?>" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
              <label class=""><?php echo $comment; ?></label>
         </div>
         <?php 

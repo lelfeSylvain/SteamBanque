@@ -30,15 +30,6 @@ $_GLOBAL['titre']  = $pdo->getValDefaut("TitreApplication");
 // Affichage de l'entete à tous les pages
 include 'vues/v_entete.php';
 
-/*obsolète
-function clean($texte) {
-    return (htmlspecialchars(trim($texte)));
-}
-
-function cleanaff($texte) {//utf8_decode
-    return stripslashes(htmlspecialchars(trim($texte)));
-}*/
-
 /*
  * déconnecte l'utilisateur et redirige le traitement sur la page menu
  */

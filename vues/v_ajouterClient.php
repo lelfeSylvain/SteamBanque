@@ -26,12 +26,12 @@ Ajouter un nouveau client</div>
     </div>
     <div class='formulaireLigneChamp'>
         <p class="palibel large">Mot de passe*  :</p>
-        <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[&#-_@=+*/?.!$<>]).{8,30}$">
-        <label class="">caractères autorisés (A-Z a-z 0-9 &#-_@=+*/?.!$><)</label>
+        <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">
+        <label class="">caractères autorisés (<?php echo $_SESSION['commentaireRegex']; ?>)</label>
     </div>
     <div class='formulaireLigneChamp'>
         <p class="palibel large">Confirmation* : </p>
-        <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[&#-_@=+*/?.!$<>]).{8,30}$">        
+        <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">        
         <label id="msg"></label>
     </div>
     <div class='formulaireLigneChamp'>

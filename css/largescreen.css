@@ -305,3 +305,17 @@ div.pied>p {
     text-align: right;
     padding: 0 0 0 10px ;
 }
+.tnumcpt {
+    font-size : 0.8em;
+    text-align: center;
+    padding: 0 0 0 10px ;
+}
+
+.tclaire {
+    background-color : grey;
+    color:  black;
+}
+.tfoncee {
+    background-color :darkgrey ;
+    color:  black;
+}

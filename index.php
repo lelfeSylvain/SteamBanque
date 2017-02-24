@@ -2,7 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
- * temps écoulé = 22h30
+ * temps écoulé = 25h30
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
@@ -62,12 +62,21 @@ elseif (!Session::isLogged()) {
                 include("controleurs/c_changerMDP.php");
                 break;
             }
-        case 'transaction': { // modifier les paramètres de l'application (seulement SUser)
+        case 'transaction': { // transaction entre le client connecté et un tier
                 include("controleurs/c_transaction.php");
+                break;
+            }
+        case 'importer': { // modifier les paramètres de l'application (seulement SUser)
+                include("controleurs/c_import.php");
+                break;
+            }
+        case 'transactionSU': { // modifier les paramètres de l'application (seulement SUser)
+                include("controleurs/c_transactionSU.php");
                 break;
             }
         case 'deconnexion': { // se déconnecter
                 logout();
+                include('controleurs/c_login.php');
                 break;
             }
         case 'defaut' :;
