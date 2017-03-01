@@ -3,7 +3,7 @@
  * dans le formulaire login
  */
 function doChallengeResponse() {
-    str = "$r1#qF@" + document.identification.password.value;
+    str = SEL + document.identification.password.value;
     document.identification.reponse.value = MD5(str);
     document.identification.mot_de_passe.value = "";
 
@@ -17,9 +17,9 @@ function encodeMDPenMD5() {
     var ancien = document.getElementById('ancien');
     var nouveau = document.getElementById('nouveau');
     var confirmation = document.getElementById('confirmation');
-    ancien.value = MD5("$r1#qF@" +ancien.value);
-    nouveau.value = MD5("$r1#qF@" +nouveau.value);
-    confirmation.value = MD5("$r1#qF@" +confirmation.value);
+    ancien.value = MD5(SEL +ancien.value);
+    nouveau.value = MD5(SEL +nouveau.value);
+    confirmation.value = MD5(SEL +confirmation.value);
 
 }
 
@@ -30,7 +30,7 @@ function encodeMDPenMD5() {
 function encodeMDPenMD5_NouveauUtil() {
     var nouveau = document.getElementById('nouveau');
     var confirmation = document.getElementById('confirmation');
-    nouveau.value = MD5("$r1#qF@" +nouveau.value);
-    confirmation.value = MD5("$r1#qF@" +confirmation.value);
+    nouveau.value = MD5(SEL +nouveau.value);
+    confirmation.value = MD5(SEL +confirmation.value);
 
 }

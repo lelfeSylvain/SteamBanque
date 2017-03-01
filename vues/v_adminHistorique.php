@@ -2,7 +2,7 @@
 $text = "";
 $lib = array("date", "compte", "<-- & date", "--> & date", "tiers", "valeurs");
 ?>
-<section name = 'historique' id = 'historique'  >
+<section name = 'historique' id = 'historique' class = 'historique' >
     Mouvements
     <form name="frmTri" method="post" action="index.php?uc=defaut&num=actuel">
         <table>           

@@ -431,7 +431,7 @@ class PDOSB {
         // 
         // $mesPost est un tableau associatif contenant les nouvelles valeurs filtrées
         if ($enregistrementOK !== null) { // on reporte ces modifications dans la BD
-            $numCompte = $this->creerCompteClient($mesPost['id']);
+           
             $res = $this->initialiserCompteClient($mesPost['id']);
             $textNav = "Nouveau client " . $mesPost['id'] . " créé.";
         } else {
@@ -441,7 +441,7 @@ class PDOSB {
     }
 
     public function effacerUnClient($num) {
-        $sql = "DELETE FROM " . self::$prefixe . "Client where `idCli`=? ";
+        $sql = "DELETE FROM " . self::$prefixe . "Client where `id`=? ";
         $this->logSQL($sql . "(" . $num . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($num));
@@ -457,7 +457,8 @@ class PDOSB {
     }
 
     public function effacerCompletementUnClient($num) {
-        return $this->effacerTousLesMouvementsDUnClient($num) and $this->effacerUnClient($num);
+        $this->effacerTousLesMouvementsDUnClient($num);
+        $this->effacerUnClient($num);
     }
 
     public function effacerLesClients($lesClient) {

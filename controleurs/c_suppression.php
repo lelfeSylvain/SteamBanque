@@ -7,4 +7,4 @@
 if (!empty($_POST['choix'] )){
    $pdo->effacerLesClients($_POST['choix'] );
 }
-include ('controleurs/c_accueil');
+include ('controleurs/c_accueil.php');

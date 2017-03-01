@@ -43,7 +43,7 @@ if ('in' === $num) {
     // pas d'enregistrement dans la BD donc dernier paramètre à false
     $dossier = $DOSSIERUPLOAD .  "/csv";
     $nomCSV = date("Ymd") . ".txt";
-    $message = importerUnFichierCSV($_FILES['mesFichiers']['name'], $_FILES['mesFichiers']['tmp_name'],$dossier,$nomCSV);
+    $message = importerUnFichierCSV($_FILES['mesFichiers']['name'], $_FILES['mesFichiers']['tmp_name'],$dossier,$nomCSV).EOL;
     
     /* lecture du fichier csv */
     $nbligne = 0;
@@ -62,7 +62,7 @@ if ('in' === $num) {
             $numCli=iso2utf8($buffer[0], $estEnISO8859);
             $prenomCli=iso2utf8($buffer[1], $estEnISO8859);
             $nomCli=iso2utf8($buffer[2], $estEnISO8859);
-            $mdp=iso2utf8($buffer[3], $estEnISO8859);
+            $mdp=md5($GLOBALS['grainDeSel'].iso2utf8($buffer[3], $estEnISO8859));
             //list($nomEle, $prenomEle, $classeEle) = explode($delimiteurCSV, iso2utf8($buffer, $estEnISO8859));
             $message .=  $numCli.' '.$prenomCli.' '. $nomCli.EOL;
             $pdo->creerUnUtilisateurCompletement(array('id'=>$numCli,'prenom'=>$prenomCli,'nom'=>$nomCli,'nouveau'=>$mdp),0);

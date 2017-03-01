@@ -14,8 +14,8 @@ $tabMois = array("janvier", "février", "mars", "avril", "mai", "juin", "juillet
 $_SESSION['debug'] = "hidden";
 $_SESSION['symbole'] = $pdo->getValDefaut("symboleMonnaie");
 $_SESSION['monnaie'] = $pdo->getValDefaut("libelleDeLaMonnaie");
-$_SESSION['numMinCompteClient']  = $pdo->getValDefaut("numCompteClient");
-$_SESSION['maxCompteParClient']  = $pdo->getValDefaut("maxCompteParClient");
+$GLOBALS['grainDeSel']  = $pdo->getValDefaut("grainDeSel");
+
 $_SESSION['fictif']  = $pdo->getValDefaut("clientTiersFictif");
 $_SESSION['affichageChronologique']  = $pdo->getValDefaut("affichageChronologique");
 $filtreminmax  = array($pdo->getValDefaut("longueurMini"), $pdo->getValDefaut("longueurMaxi"));

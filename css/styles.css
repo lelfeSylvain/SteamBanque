@@ -1,18 +1,8 @@
 /* 
     Created on : 19 mars 2016, 17:45:43
+    modify : 1 mars 2017, 11:06
     Author     : sylvain
 */
-
-/************************************************************************
-Police de caractères spécifiques
-************************************************************************/
-/* @font-face kit by Fonts2u (http://www.fonts2u.com) */ 
-@font-face {
-    font-family:"Rock Salt";
-    src:url("font/RockSalt.eot?") format("eot"),url("font/RockSalt.woff") format("woff"),url("font/RockSalt.ttf") format("truetype"),url("font/RockSalt.svg#RockSalt") format("svg");
-    font-weight:normal;
-    font-style:normal;
-}
 
 /************************************************************************
  Style général
@@ -31,17 +21,17 @@ body {
     border:0;			/* This removes the border around the viewport in old versions of IE */
     /* on utilise toute la place */ 
     width:100%;
-    height: 100%;
+    min-height: 100vh;
 }
 
 /* section principal */
 body>section{
-    width:96%;			/* page width minus left and right padding */
+    width:50%;			/* page width minus left and right padding */
     left:2%;
     background-color : #333;
     color: chocolate; 
     font-family:  "Arial", "Trebuchet MS";
-    min-height: 95vh;
+    min-height: 100vh;
     display : flex;
     flex-direction : column;
     justify-content: space-between;
@@ -65,102 +55,11 @@ a:link {
 a:visited {
     color : SandyBrown;
 }
-/************************************************************************
-affichage des menus est encapsulé dans cette section
- ************************************************************************/
-section.menu {
-    display : flex;
-    flex-direction : column;
-    justify-content: space-around;
-    
-}
-
-/* La première lettre de chaque ligne est en majuscule */
-.boite ::first-letter {
-    text-transform: capitalize;
-}
-
-/* div boite */
-.boite { 
-    padding: 2px 2px 2px 5px ;    
-    word-wrap: break-word;
-    display : flex;
-    flex-direction: column ;
-    justify-content: space-between;
-}
-/* affiche la date du jour*/ 
-.jour{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    color: #DD0;
-    font-weight: bold;
-    text-decoration: none;
-    font-family: "Rock Salt",arial,serif;
-    font-size:18px;
-    text-align: center;
-    max-height : 110px;
-}
-
-.j1 {
-    display : flex;
-    justify-content: center;
-    margin : 0px 5px 0px 5px ;
-}
-
-.unecase.soir.num9 {
-    background-image : url(../images/logosansfond.png);
-    background-position:100% 0%;
-}
-
-/* pour la saisie des menus */
-.midi.saisi {
-    background-color: lightgoldenrodyellow; 
-
-    color: chocolate; 
-
-}
 
 .saisi {
     width: 40%;
     margin: 5px;
 }
-/* la case sélectionnée : c'est-à-dire celle qu'on met en valeur */
-.selection {
-    font-size : 1.2em;
-    height: 120px;
-}
-
-.selection.tantot{
-    background-color: #dadada ; 
-}
-
-.selection.matin{
-    background-color:  aqua ; 
-    color:  maroon; 
-}
-/* si c'est un message*/ 
-.message {
-    margin: auto ;
-    text-align: center;
-    font-size : 1.4em;
-}
-
-/* style des affichages des textes des repas */
-.repas {
-
-}
-
-/* les types de plat */
-.entree,
-.plat,
-.lait,
-.dessert {    
-    margin : 0 0 3px 0;
-}
-
-/*Pour les commentaires*/
-.commentaire {}
 
 /************************************************************************
 navigation du menu
@@ -170,4 +69,237 @@ nav.principal {
     flex-direction : row;
     justify-content: space-between;
     margin-top: 10px;
+}
+/* ******************************************************* 
+  SteamBanque :   affichage de l'historique des comptes
+********************************************************** */
+
+.tdate {
+    font-size : 0.8em;
+}
+
+.tlib {
+    padding: 0 0 0 10px ;
+    font-size : 1em;
+}
+
+.tmontant {
+    font-size : 1em;
+    text-align: right;
+    padding: 0 0 0 10px ;
+}
+.tnumcpt {
+    font-size : 0.8em;
+    text-align: center;
+    padding: 0 0 0 10px ;
+}
+
+.tclaire {
+    background-color : grey;
+    color:  black;
+}
+.tfoncee {
+    background-color :darkgrey ;
+    color:  black;
+}
+
+/* **************************************************
+SteamBanque : Sections des pages accueils
+*************************************************** */
+/* section principal de l'accueil */
+section {
+    background-color:  grey;
+    color:black;
+}
+
+/* */
+.bilanoperation {
+background-color:  lightcoral;
+    color:black;
+}
+
+.bonjour {
+
+}
+
+.menu {
+
+}
+
+.soldes {
+
+}
+
+.historique {
+
+}
+
+.transaction {
+
+}
+
+.import {
+
+}
+/* Div de section */
+.accueilTitre {
+
+}
+
+/* **********************************************************
+Steambanque : présentation général
+Entete design avec coin arrondi
+affiche les dates de la semaine
+************************************************************* */
+
+.entete {
+    background-color : whitesmoke;
+    height: 30px;
+    width: 800px;
+    color:  chocolate;
+    border-radius : 0 0 20px 0  / 0 0 90% 0  ;
+}
+
+body>section>header.principal {
+    font-size : 1.4em;
+}
+
+/* Pied de page */
+/* pied de page principal qui est au dessous de la section principal */
+footer {
+    font-size : 0.8em;
+    text-align: right;
+    display : flex;
+    flex-flow : column wrap-reverse;
+    justify-content:  flex-end;
+    margin-right: 5px;
+
+
+
+
+}
+
+footer>nav {
+    background-color : whitesmoke;
+    margin: 10px 0 0 0; 
+    width: 800px;
+    color:  chocolate;
+    border-radius : 20px 0 0 0  / 90% 0 0 0  ;
+
+}
+
+div.pied {
+    padding-right: 5px;
+}
+
+div.pied>p {
+    margin : 0px;
+}
+
+/* ******************************************************
+SteamBanque : Formulaires
+******************************************************** */
+/* tous les formulaires */
+.formulaire {
+
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.court {
+    width: 40%;
+}
+
+/************************************************************************
+formulaire de saisie 
+ ************************************************************************/
+
+
+.formulaireSaisie {
+    display : flex;
+    flex-direction : column;
+    justify-content: flex-start;
+    padding: 5px ;
+    margin: 10px;
+    width: 80%;
+    height: 80%;
+}
+
+.formulaireLigneRadio>label {
+    width: 100px;
+}
+
+.formulaireLesChamps {
+    display : flex;
+    flex-direction : column;
+    justify-content:  center;
+    padding-left: 40px;
+}
+.formulaireLigneChamp {
+    display : flex;
+    flex-direction : row;    
+    justify-content: flex-start;
+    padding: 5px ;
+}
+.formulaireLigneRadio {
+    display : flex;
+    flex-direction : row;    
+    justify-content: flex-start;
+    padding: 5px ;
+}
+.formulaireColonneLibelle {
+    display : flex;
+    flex-direction : column;    
+    justify-content:  flex-end;
+    padding: 0px 5px 5px  5px ;
+}
+
+.formulaireBoutonValidation{
+    display : flex;
+    flex-direction :row;
+    justify-content:    flex-end;
+    width: 60%;
+    margin :30px;
+    height: 30px;
+}
+
+.formulaireLogin {
+    min-height : 400px;
+    display : flex;
+    flex-direction : column; 
+    justify-content:center;
+
+}
+
+.palibel{
+    padding-bottom: 8px; 
+    margin:  0px 5px 0px 15px;
+    width: 160px;
+}
+.palibel2{
+    padding-bottom: 8px; 
+    margin:  0px 5px 0px 15px;
+    width: 120px;
+}
+.palibel3{
+    padding-bottom: 8px; 
+    margin:  0px 5px 0px 15px;
+    width: 250px;
+}
+.pachamp{
+    margin-bottom: 8px;
+}
+/* label */
+.champobligatoire {
+    margin-left : 10px;
+}
+/* boutons */
+.validation {
+    margin: 5px 30px 5px 30px;
+}
+
+.bouton {
+    display : flex;
+    justify-content: space-around;
 }

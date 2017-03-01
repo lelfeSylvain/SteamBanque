@@ -1,8 +1,6 @@
-<section name = 'soldes' id = 'soldes'  >
+<section name = 'soldes' id = 'soldes' class='soldes' >
     <form method="POST" id ='fsolde' action="index.php?uc=supprimer&num=in"  enctype="multipart/form-data" class="formulaireCourt" onsubmit="return verif();">	
-
-        Soldes
-        <table >
+    Soldes <table >
             <tr><th>num Compte</th><th>Nom Client</th><th>solde</th><th>sélection</th></tr>
             <?php
             $couleur = "claire";
@@ -22,7 +20,9 @@
             ?>
 
         </table>
-        <input type="submit" value="Supprimer">
+        <div class='formulaireLigneChamp'>
+            <input type="submit" value="Supprimer" class='bouton valider'>
+        </div>
     </form>
 
     <script>
