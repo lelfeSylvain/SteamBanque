@@ -2,7 +2,7 @@
 <?php
 /* Projet SteamBanque
   sylvain 18 décembre 2016
- * temps écoulé = 25h30
+ * temps écoulé = 31h30
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 
@@ -70,8 +70,8 @@ elseif (!Session::isLogged()) {
                 include("controleurs/c_import.php");
                 break;
             }
-        case 'transactionSU': { // modifier les paramètres de l'application (seulement SUser)
-                include("controleurs/c_transactionSU.php");
+        case 'supprimer': { //supprimer un ou plusieurs utilisateurs
+                include("controleurs/c_suppression.php");
                 break;
             }
         case 'deconnexion': { // se déconnecter

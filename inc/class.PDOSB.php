@@ -128,14 +128,15 @@ class PDOSB {
      * par défaut ce n'est pas un super user
      */
     public function setNouveauUtil($pseudo, $mdp, $prenom, $nom, $estSU = 0) {
+        $valDecouvert = $this->getValDefaut("decouvertAutoriseDefaut");
         if (1 === $estSU) {
-            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom,superUser) values (?,?,?,?,1)";
+            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom,superUser, maxDecouvert) values (?,?,?,?,1,?)";
         } else {
-            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom) values (?,?,?,?)";
+            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom, maxDecouvert) values (?,?,?,?,?)";
         }
-        $this->logSQL($sql . " (" . $pseudo . ", " . $mdp . ", " . $prenom . ", " . $nom . ")");
+        $this->logSQL($sql . " (" . $pseudo . ", " . $mdp . ", " . $prenom . ", " . $nom . ", " . $valDecouvert . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($pseudo, $mdp, $prenom, $nom));
+        $sth->execute(array($pseudo, $mdp, $prenom, $nom, $valDecouvert));
         return $sth;
     }
 
@@ -228,40 +229,6 @@ class PDOSB {
 
     /*
      * Formulaire de création de nouveaux clients
-     * Création d'un compte client supplémentaire
-     */
-
-    public function creerCompteClient($id) {
-        $num = ((int) $this->getMaxNumCompteClient($id) ) + 1;
-        $valDecouvert = $this->getValDefaut("decouvertAutoriseDefaut");
-        $sql = "insert into " . self::$prefixe . "Compte (num, idcli,`maxDecouvert`) value (?,?,?)";
-        $this->logSQL($sql . "(" . $num . ", " . $id . ", " . $valDecouvert . ")");
-        $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($num, $id, $valDecouvert));
-
-        return $num;
-    }
-
-    /*
-     * Formulaire de création de nouveaux clients
-     * Renvoie le numéro le plus grand pour un comte client, sinon renvoie la valeur par défaut (cf. table param)
-     */
-
-    public function getMaxNumCompteClient($id) {
-
-        $sql = "SELECT max(num) FROM " . self::$prefixe . "Compte where `idCli`=?";
-        $this->logSQL($sql . "(" . $id . ")");
-        $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($id));
-        $ligne = $sth->fetch();
-        if ($ligne['num'] === null) {
-            return $this->getValDefaut("numCompteClient");
-        } else
-            return $ligne['num'];
-    }
-
-    /*
-     * Formulaire de création de nouveaux clients
      * Renvoie la valeur par défaut (cf. table param) d'un paramètre 
      */
 
@@ -280,12 +247,10 @@ class PDOSB {
      * Initialisation d'un compte client 
      */
 
-    public function initialiserCompteClient($idCli, $idCompte) {
-        $num = 0;
+    public function initialiserCompteClient($idCli) {
         $montant = $this->getValDefaut("valInitialeCompteClient");
         $idTiers = $this->getValDefaut("clientTiersFictif");
-        $numTiers = $this->getValDefaut("compteTiersFictif");
-        return $this->mouvementCompteClient($idCli, $idCompte, $montant, $idTiers, $numTiers, $num);
+        return $this->mouvementCompteClient($idCli, $montant, $idTiers, 0);
     }
 
     /*
@@ -293,14 +258,14 @@ class PDOSB {
      * Passer un mouvement entre compte
      */
 
-    public function mouvementCompteClient($idCli, $idCompte, $montant, $idTiers, $numTiers, $numMouvement = null) {
+    public function mouvementCompteClient($idCli, $montant, $idTiers, $numMouvement = null) {
         if (null === $numMouvement) {
             $numMouvement = $this->getProchainNumMouvement($idCli, $idCompte);
         }
-        $sql = "insert into " . self::$prefixe . "Mouvement (idCli,numCpt, num,montant,idTiers, numTiers) value (?,?,?,?,?,?)";
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ", " . $numMouvement . ", " . $montant . ", " . $idTiers . ", " . $numTiers . ")");
+        $sql = "insert into " . self::$prefixe . "Mouvement (idCli, num,montant,idTiers) value (?,?,?,?)";
+        $this->logSQL($sql . "(" . $idCli . ", "  . $numMouvement . ", " . $montant . ", " . $idTiers  . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte, $numMouvement, $montant, $idTiers, $numTiers));
+        $sth->execute(array($idCli,  $numMouvement, $montant, $idTiers));
 
         return $sth;
     }
@@ -310,12 +275,12 @@ class PDOSB {
      * Renvoie le prochain numéro du mouvement pour le compte ciblé
      */
 
-    public function getProchainNumMouvement($idCli, $idCompte) {
+    public function getProchainNumMouvement($idCli) {
 
-        $sql = "SELECT max(num)+1 as n FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=?";
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sql = "SELECT max(num)+1 as n FROM " . self::$prefixe . "Mouvement where `idCli`=? ";
+        $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte));
+        $sth->execute(array($idCli));
         $ligne = $sth->fetch();
         if (null === $ligne['n'])
             $ligne['n'] = 0;
@@ -328,14 +293,14 @@ class PDOSB {
      * NB renvoie les opérations triées à rebours
      */
 
-    public function getDernieresOperationsDuClient($idCli, $idCompte, $nb = null) {
+    public function getDernieresOperationsDuClient($idCli, $nb = null) {
         if (null === $nb) {
             $nb = $this->getValDefaut("nbLigneAffiche");
         }
-        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=? order by ts desc limit " . $nb;
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idCli`=? order by ts desc limit " . $nb;
+        $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte));
+        $sth->execute(array($idCli));
         $ligne = $sth->fetchAll();
         return $ligne;
     }
@@ -346,56 +311,85 @@ class PDOSB {
      * NB renvoie les opérations triées à rebours
      */
 
-    public function getDernieresOperationsVersClient($idCli, $idCompte, $nb = null) {
+    public function getDernieresOperationsVersClient($idCli, $nb = null) {
         if (null === $nb) {
             $nb = $this->getValDefaut("nbLigneAffiche");
         }
-        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idTiers`=? and numTiers=? order by ts desc limit " . $nb;
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idTiers`=? and  order by ts desc limit " . $nb;
+        $this->logSQL($sql . "(" . $idCli .  ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte));
+        $sth->execute(array($idCli));
         $ligne = $sth->fetchAll();
         return $ligne;
     }
-    
+
     /*
      * Formulaire de visualisation du SU
      * Renvoie les nb dernières opérations 
      * NB renvoie les opérations triées à rebours
      */
 
-    public function getLesDernieresOperations($trier, $nb = null) {
+    public function getLesDernieresOperations($resultat, $nb = null) {
         if (null === $nb) {
             $nb = $this->getValDefaut("nbLigneAfficheAdmin");
         }
-        switch($trier) {
-            case 0: $tri = "order by ts desc"; break;
-            case 1: $tri = "order by idCli, numCpt "; break;
-            case 2: $tri = "where montant <=0 order by ts desc"; break;
-            case 3: $tri = "where montant >=0 order by ts desc"; break;
-            case 4: $tri = "order by idTiers,numTiers"; break;
-            case 5: $tri = "order by montant desc,ts desc"; break;
-        }
-        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement   ".$tri."  limit " . $nb;
-        $this->logSQL($sql );
+        $injection = array();
+        if (null != $resultat["numCpt"]) { // on filtre sur le n° compte
+            $tri = "where idCli = ? order by ts desc";
+            $injection = array($resultat["numCpt"]);
+            $this->logSQL($resultat["numCpt"]);
+        } else if (null != $resultat["numCptTiers"]) {  // on filtre sur le n° compte tier
+            $tri = "where idTiers = ? order by ts desc";
+            $injection = array($resultat["numCptTiers"]);
+            $this->logSQL($resultat["numCptTiers"]);
+        } else  // on filtre sur le filtre choisi
+            switch ($resultat["trier"]) {
+                case 0: $tri = "order by ts desc";
+                    break;
+                case 1: $tri = "order by idCli ,ts desc";
+                    break;
+                case 2: $tri = "where montant <=0 order by ts desc";
+                    break;
+                case 3: $tri = "where montant >=0 order by ts desc";
+                    break;
+                case 4: $tri = "order by idTiers, ts";
+                    break;
+                case 5: $tri = "order by montant desc,ts desc";
+                    break;
+            }
+        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement   " . $tri . "  limit " . $nb;
+        $this->logSQL($sql);
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute();
+        $sth->execute($injection);
         $ligne = $sth->fetchAll();
         return $ligne;
-    }   
+    }
 
     /*
      * Formulaire de visualisation des  clients
      * Renvoie le solde du compte ciblé
      */
 
-    public function getSolde($idCli, $idCompte) {
-        $sql = "SELECT sum(montant) as solde FROM " . self::$prefixe . "Mouvement where `idCli`=? and numCpt=?";
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+    public function getSolde($idCli) {
+        $sql = "SELECT sum(montant) as solde FROM " . self::$prefixe . "Mouvement where `idCli`=? ";
+        $this->logSQL($sql . "(" . $idCli .")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte));
+        $sth->execute(array($idCli));
         $ligne = $sth->fetch();
         return $ligne['solde'];
+    }
+
+    /*
+     * Formulaire de visualisation des  clients
+     * Renvoie le solde du compte ciblé
+     */
+
+    public function getLesSoldes() {
+        $sql = "SELECT idCli, concat(C.prenom,' ',C.nom) as nomprenom,sum(montant) as solde FROM " . self::$prefixe . "Mouvement M, " . self::$prefixe . "Client C where C.id=idCli group by idCli, nomprenom";
+        $this->logSQL($sql);
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array());
+        return $sth->fetchAll();
     }
 
     /*
@@ -403,11 +397,11 @@ class PDOSB {
      * Renvoie la valeur de l'autorisation de découvert du compte ciblé
      */
 
-    public function getDecouvert($idCli, $idCompte) {
-        $sql = "SELECT maxDecouvert FROM " . self::$prefixe . "Compte where `idCli`=? and num=?";
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+    public function getDecouvert($idCli) {
+        $sql = "SELECT maxDecouvert FROM " . self::$prefixe . "Client where `idCli`=? ";
+        $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte));
+        $sth->execute(array($idCli));
         $ligne = $sth->fetch();
         return $ligne['maxDecouvert'];
     }
@@ -418,12 +412,58 @@ class PDOSB {
      */
 
     public function existe($idCli, $idCompte) {
-        $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "Compte where `idCli`=? and num=?";
-        $this->logSQL($sql . "(" . $idCli . ", " . $idCompte . ")");
+        $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "Client where `idCli`=? ";
+        $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli, $idCompte));
+        $sth->execute(array($idCli));
         $ligne = $sth->fetch();
         return $ligne['nb'];
+    }
+
+    public function creerUnUtilisateurCompletement($mesPost, $estSu) {
+        // on filtre la case à cocher
+        if ($estSu) {
+            $enregistrementOK = $this->setNouveauUtil($mesPost['id'], $mesPost['nouveau'], $mesPost['prenom'], $mesPost['nom'], 1);
+        } else {
+            $enregistrementOK = $this->setNouveauUtil($mesPost['id'], $mesPost['nouveau'], $mesPost['prenom'], $mesPost['nom']);
+        }
+
+        // 
+        // $mesPost est un tableau associatif contenant les nouvelles valeurs filtrées
+        if ($enregistrementOK !== null) { // on reporte ces modifications dans la BD
+            $numCompte = $this->creerCompteClient($mesPost['id']);
+            $res = $this->initialiserCompteClient($mesPost['id']);
+            $textNav = "Nouveau client " . $mesPost['id'] . " créé.";
+        } else {
+            $textNav = "Problème avec la BD dans l'enregistrement du nouveau client. Le compte n'a pas été créé";
+        }
+        return $textNav;
+    }
+
+    public function effacerUnClient($num) {
+        $sql = "DELETE FROM " . self::$prefixe . "Client where `idCli`=? ";
+        $this->logSQL($sql . "(" . $num . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($num));
+        return $sth;
+    }
+
+    public function effacerTousLesMouvementsDUnClient($num) {
+        $sql = "DELETE FROM " . self::$prefixe . "Mouvement where `idCli`=? or idTiers = ?";
+        $this->logSQL($sql . "(" . $num . ")");
+        $sth = self::$monPdo->prepare($sql);
+        $sth->execute(array($num, $num));
+        return $sth;
+    }
+
+    public function effacerCompletementUnClient($num) {
+        return $this->effacerTousLesMouvementsDUnClient($num) and $this->effacerUnClient($num);
+    }
+
+    public function effacerLesClients($lesClient) {
+        foreach ($lesClient as $value) {
+            $this->effacerCompletementUnClient($value);
+        }
     }
 
 }

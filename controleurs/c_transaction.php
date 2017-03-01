@@ -3,15 +3,7 @@
 function validerMontant($montant) {
     $retour = false;
     if (filter_var($montant, FILTER_VALIDATE_FLOAT) !== false) {
-        $m = intval(filter_var($montant, FILTER_VALIDATE_FLOAT) * 100) / 100;
-        if ($m >= 0) {
-            $pdo = PDOSB::getPdoSB();
-            $decouvert = $pdo->getDecouvert($_SESSION['id'], $_SESSION['numCompte']);
-            $solde = $pdo->getSolde($_SESSION['id'], $_SESSION['numCompte']);
-            if ($m < ($solde + $decouvert)) {
-                $retour = $m;
-            }
-        }
+        $retour = intval(filter_var($montant, FILTER_VALIDATE_FLOAT) * 100) / 100;
     }
     return $retour;
 }
@@ -35,40 +27,49 @@ function validerPWD($pwd) {
     return $retour;
 }
 
-function validerNumCompte($numCompte) {
-    $retour = false;
-    $pdo = PDOSB::getPdoSB();
-    if (1 === ((int) $pdo->existe($_SESSION['idTiers'], $numCompte))) {
-        $retour = $numCompte;
-        unset($_SESSION['idTiers']);
-    }
-    return $retour;
-}
 
 if ("check" === $num) {// on récupère les POST des champs de saisie
-    $decouvert = $pdo->getDecouvert($_SESSION['id'], $_SESSION['numCompte']);
-    $solde = $pdo->getSolde($_SESSION['id'], $_SESSION['numCompte']);
     $tabFiltre = array('idTiers' => array(
             'filter' => FILTER_CALLBACK, // procédure maison
             'options' => 'validerNumClient'
         ), 'nouveau' => array(
             'filter' => FILTER_CALLBACK, // procédure maison
             'options' => 'validerPWD'
-        ), 'numTiers' => array(
-            'filter' => FILTER_CALLBACK, // procédure maison
-            'options' => 'validerNumCompte'
+        ), 'idSource' => array(
+            'filter' => FILTER_CALLBACK, // procédure maison 
+            'options' => 'validerNumClient'
+        ),  'estClient' => array(
+            'filter' => FILTER_SANITIZE_NUMBER_INT, // est un entier (en fait un booléen)
+            'options' => null
         ), 'montant' => array(
             'filter' => FILTER_CALLBACK, // procédure maison
             'options' => 'validerMontant'
     ));
 
     $resultat = filter_input_array(INPUT_POST, $tabFiltre);
+
     if ($resultat != null) { //Si le formulaire a bien été posté.
-//Enregistrer des messages d'erreur perso.
+        if (0 == $resultat['estClient']) {// formulaire admin
+            $idSource = $resultat['idSource'];
+        } else {// formulaire client
+            $idSource = $_SESSION['id'];
+        }
+        // vérification si le mouvement est autorisé (ne dépasse pas le découvert autorisé
+        $decouvert = $pdo->getDecouvert($idSource);
+        $solde = $pdo->getSolde($idSource);
+        if ($resultat['montant'] > ($solde + $decouvert)) {
+            $resultat['montant'] = false;
+        }
+        // Attention, pas de mot de passe si l'utilisateur est un admin
+        if (! $estClient) {
+            $resultat['nouveau'] = 'ok';
+        }
+        //Enregistrer des messages d'erreur perso.
         $messageErreur = array(
-            'idTiers' => "Le numéro de client n'existe pas.",
+            'idTiers' => "Le numéro du client tier n'existe pas.",
             'nouveau' => "Le mot de passe n'est pas valide.",
-            'numTiers' => "Le numéro de compte n'existe pas pour ce Client",
+            'idSource' => "Le numéro du client source n'existe pas.",            
+            'estClient' => "",
             'montant' => "Le montant doit être positif et ne doit pas dépasser le solde (" . ($solde + $decouvert) . " " . $_SESSION['symbole'] . ")"
         );
         $nbrErreurs = 0;
@@ -83,11 +84,11 @@ if ("check" === $num) {// on récupère les POST des champs de saisie
         }
 
         if ($nbrErreurs == 0) {
-            if ($_SESSION['id'] == $resultat['idTiers'] and $_SESSION['numCompte'] == $resultat['numTiers']) {
+            if ($idSource == $resultat['idTiers'] ) {
                 $textNav = "Le compte tiers est le même que le votre. Transaction annulée" . EOL;
             } else {
-                $pdo->mouvementCompteClient($_SESSION['id'], $_SESSION['numCompte'], -$resultat['montant'], $resultat['idTiers'], $resultat['numTiers']);
-                $pdo->mouvementCompteClient($resultat['idTiers'], $resultat['numTiers'], $resultat['montant'], $_SESSION['id'], $_SESSION['numCompte']);
+                $pdo->mouvementCompteClient($idSource,  -$resultat['montant'], $resultat['idTiers']);
+                $pdo->mouvementCompteClient($resultat['idTiers'], $resultat['montant'], $idSource);
                 $textNav = "Transaction effectué";
             }
         }
@@ -95,8 +96,6 @@ if ("check" === $num) {// on récupère les POST des champs de saisie
         $textNav = "Vous n'avez rien posté.";
     }
 }
-if ($estSU) {
-    include('vues/v_transaction.php');
-} else {
-    include('controleurs/c_accueil.php');
-}
+
+include('controleurs/c_accueil.php');
+

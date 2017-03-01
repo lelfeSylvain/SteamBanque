@@ -34,26 +34,17 @@ function importerUnFichierCSV($fileName, $idFichier,$dossier,$d) {
 }
 
 // paramètres 
-
-$tailleMaxi = 100000; // On limite le fichier à 100Ko 
 $message = "";
 $dest = "csv";
 $delimiteurCSV=';'; // TODO demander à l'utilisateur quel délimiteur est utilisé 
 $estEnISO8859 = false; // TODO vérifier que le fichier est en iso8859
 
-if ('1' === $num) {
+if ('in' === $num) {
     // pas d'enregistrement dans la BD donc dernier paramètre à false
-    $dossier = $DOSSIERUPLOAD . dec2hex($_SESSION['nc']) . "/csv";
+    $dossier = $DOSSIERUPLOAD .  "/csv";
     $nomCSV = date("Ymd") . ".txt";
     $message = importerUnFichierCSV($_FILES['mesFichiers']['name'], $_FILES['mesFichiers']['tmp_name'],$dossier,$nomCSV);
-    $options = array(
-        'default' => getYear(), // valeur à retourner si le filtre échoue
-        // autres options ici...
-        'min_range' => getYear(-10),
-        'max_range' => getYear(10)
-    );
-    $annee = filter_input(INPUT_POST, 'annee', FILTER_VALIDATE_INT, $options);
-    $message .= EOL . "année : " . $annee . EOL;
+    
     /* lecture du fichier csv */
     $nbligne = 0;
     $handle = @fopen($dossier.'/'.$nomCSV, "r");
@@ -62,25 +53,20 @@ if ('1' === $num) {
     
         if (($buffer = fgetCSV($handle, 4096,$delimiteurCSV)) !== false) {
             $nbCol=count($buffer);
-            if ($nbCol>3) {// attention le tableau $colonneSup commence à 3 d'indice
-                for($i=3;$i<$nbCol;$i++){                    
-                    $colonneSup[$i]=$pdo->addPropriete($_SESSION['nt'],$buffer[$i]);
-                    $message .='Ajout de la proprieté : '.$buffer[$i].EOL;
-                }
+            if ($nbCol>4) {
+                $message .= "Le fichier comporte trop de colonnes (max = 4)".EOL;
             }
         }
         // autres lignes
         while (($buffer = fgetCSV($handle, 4096,$delimiteurCSV)) !== false) {
-            $nomEle=iso2utf8($buffer[0], $estEnISO8859);
-            $prenomEle=iso2utf8($buffer[1], $estEnISO8859);
-            $classeEle=iso2utf8($buffer[2], $estEnISO8859);
+            $numCli=iso2utf8($buffer[0], $estEnISO8859);
+            $prenomCli=iso2utf8($buffer[1], $estEnISO8859);
+            $nomCli=iso2utf8($buffer[2], $estEnISO8859);
+            $mdp=iso2utf8($buffer[3], $estEnISO8859);
             //list($nomEle, $prenomEle, $classeEle) = explode($delimiteurCSV, iso2utf8($buffer, $estEnISO8859));
-            $message .=  $nomEle.' '.$prenomEle.' '. $classeEle.EOL;
-            $numClasse = $pdo->setClasseIfNotExist($classeEle, $_SESSION['nt']);
-            $numEleve = $pdo->setEleveIfNotExist($nomEle, $prenomEle, $numClasse);
-            for($i=3;$i<$nbCol;$i++){
-                $pdo->setValeurPropriete($numEleve,$colonneSup[$i],$buffer[$i]);
-            }
+            $message .=  $numCli.' '.$prenomCli.' '. $nomCli.EOL;
+            $pdo->creerUnUtilisateurCompletement(array('id'=>$numCli,'prenom'=>$prenomCli,'nom'=>$nomCli,'nouveau'=>$mdp),0);
+            
             $nbligne++;
         }
         if (!feof($handle)) {
@@ -89,12 +75,7 @@ if ('1' === $num) {
         fclose($handle);
         $message .= $nbligne . " lignes importées";
     }
-} /* elseif ('Multi1' === $num) {// tout un sous-répertoire
-  //$message = "Traitement non implémenté";
-  foreach ($_FILES["mesFichiers"]["error"] as $key => $error) {
-  if (UPLOAD_ERR_OK == $error) {
-  $message .= importerUnFichier($_FILES['mesFichiers']['name'][$key], $_FILES['mesFichiers']['tmp_name'][$key], $dossier, $dest, $numEleve).EOL;
-  }
-  }
-  } */
-include('vues/v_import.php');
+} 
+$textNav = $message;
+
+include('controleurs/c_accueil.php');

@@ -23,10 +23,10 @@ $filtreminmax  = array($pdo->getValDefaut("longueurMini"), $pdo->getValDefaut("l
 $_SESSION['regex']  = str_replace(array("%min%","%max%"), $filtreminmax, $pdo->getValDefaut("regexMDP"));
 $_SESSION['commentaireRegex']  = $pdo->getValDefaut("commentaireRegex");
 unset($filtreminmax);
+$DOSSIERUPLOAD = 'upload/';
 
-
-$_GLOBAL['titre']  = $pdo->getValDefaut("TitreApplication");
-
+$GLOBALS['titre']  = $pdo->getValDefaut("TitreApplication");
+$GLOBALS['tailleMaxi'] = 10000; // On limite le fichier à 100Ko 
 // Affichage de l'entete à tous les pages
 include 'vues/v_entete.php';
 
@@ -65,4 +65,36 @@ function dateFrancais($d) {
     }
     $tabMois = array("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
     return $uneDate->format(" d ") . $tabMois[$uneDate->format("m") - 1] . $uneDate->format(" Y ");
+}
+
+function tailleOk($taille) {
+    return $taille <= $GLOBALS['tailleMaxi'];
+}
+function creerDossier($dossier) {
+    $erreur = "";
+    $ilyaerreur = false;
+    if (!file_exists($dossier)) {// le répertoire n'existe pas : on va le créer
+        if (!mkdir($dossier, 0777, true)) {// erreur de création
+            $erreur = "Impossible de créer le répertoire destination.";
+            $ilyaerreur = true;
+        }
+    } elseif (is_file($dossier)) {// un fichier porte le même nom
+        $erreur = "Le répertoire de destination existe déjà, mais ce n'est pas un répertoire.";
+        $ilyaerreur = true;
+    }
+    if ($ilyaerreur) {
+        return $erreur;
+    } else {
+        return true;
+    }
+}
+
+/*
+ * retourne la chaine convertit en UTF par défaut. sinon renvoie la chaine initiale
+ */
+
+function iso2utf8($str, $isISO = true) {
+    if ($isISO)
+        return utf8_encode($str);
+    return $str;
 }
