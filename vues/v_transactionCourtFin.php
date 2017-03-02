@@ -1,4 +1,4 @@
-        <div class='formulaireLigneChamp'>
+        <div class='formulaireLigneChamp '>
             <p class="palibel large">n°client destinataire*  :</p>
             <input type="text" name="idTiers" value="" id="idTiers" size="30" required >        
         </div>

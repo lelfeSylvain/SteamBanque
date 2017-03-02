@@ -51,8 +51,11 @@ if ("check" === $num) {// on récupère les POST des champs de saisie
     if ($resultat != null) { //Si le formulaire a bien été posté.
         if (0 == $resultat['estClient']) {// formulaire admin
             $idSource = $resultat['idSource'];
+            // Attention, pas de mot de passe si l'utilisateur est un admin
+            $resultat['nouveau'] = 'ok';
         } else {// formulaire client
             $idSource = $_SESSION['id'];
+            $resultat['idSource'] =$idSource;
         }
         // vérification si le mouvement est autorisé (ne dépasse pas le découvert autorisé
         $decouvert = $pdo->getDecouvert($idSource);
@@ -61,9 +64,9 @@ if ("check" === $num) {// on récupère les POST des champs de saisie
             $resultat['montant'] = false;
         }
         // Attention, pas de mot de passe si l'utilisateur est un admin
-        if (! $estClient) {
+     /*   if (! $estClient) {
             $resultat['nouveau'] = 'ok';
-        }
+        } */
         //Enregistrer des messages d'erreur perso.
         $messageErreur = array(
             'idTiers' => "Le numéro du client tier n'existe pas.",
@@ -72,10 +75,16 @@ if ("check" === $num) {// on récupère les POST des champs de saisie
             'estClient' => "",
             'montant' => "Le montant doit être positif et ne doit pas dépasser le solde (" . ($solde + $decouvert) . " " . $_SESSION['symbole'] . ")"
         );
+        $err = array (
+            'idTiers' => "n°client destinataire",
+            'nouveau' => "mot de passe",
+            'idSource' => "numéro du client",            
+            'estClient' => "estClient",
+            'montant' => "montant");
         $nbrErreurs = 0;
         foreach ($tabFiltre as $cle => $valeur) { //Parcourir tous les champs voulus.
             if ($resultat[$cle] === null) { //Si le champ est vide.
-                $textNav = 'Veuillez remplir le champ ' . $cle . EOL;
+                $textNav = 'Veuillez remplir le champ ' . $err[$cle] . EOL;
                 $nbrErreurs++;
             } elseif ($resultat[$cle] === false) { //S'il n'est pas valide.
                 $textNav = $messageErreur[$cle] . EOL;

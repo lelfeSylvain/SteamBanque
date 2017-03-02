@@ -6,18 +6,12 @@ include_once 'inc/class.MakeLog.php';
  * Modèle du projet : permet d'accéder aux données de la BD
  * La classe est munie d'un outil pour logger les requêtes
  *
- * @author sylvain
- * @date janvier-février 2016
+ * @author l'elfe Sylvain
+ * @date décembre 2016 -mars 2017
  */
 class PDOSB {
-
-    // paramètres d'accès au SGBD
-    private static $serveur = 'mysql:host=localhost';
-    private static $bdd = 'dbname=sylvain';
-    private static $user = 'sylvain';
-    private static $mdp = 'sylvain';
     // préfixe de toutes les tables
-    public static $prefixe = "SB_";
+    public $prefixe;
     // classe technique permettant d'accéder au SGBD
     private static $monPdo;
     // pointeur sur moi-même (pattern singleton)
@@ -30,9 +24,9 @@ class PDOSB {
      * Constructeur privé, crée l'instance de PDO qui sera sollicitée
      * pour toutes les méthodes de la classe
      */
-    private function __construct() {
-
-        self::$monPdo = new PDO(self::$serveur . ';' . self::$bdd, self::$user, self::$mdp);
+    private function __construct($serveur, $bdd, $user, $mdp, $pprefixe) {
+        $this->prefixe = $pprefixe;
+        self::$monPdo = new PDO($serveur . ';' . $bdd, $user, $mdp);
         self::$monPdo->query("SET CHARACTER SET utf8");
         // initialise le fichier log
         $this->monLog = new MakeLog("erreurSQL", "./log/", MakeLog::WRITE);
@@ -49,7 +43,10 @@ class PDOSB {
      */
     public static function getPdoSB() {
         if (null === self::$moi) {
-            self::$moi = new PDOSB();
+            include_once('inc/config.php');
+            $serveur = $typeBaseDeDonnees . ':host=' . $serveurBaseDeDonnees;
+            $bdd = 'dbname=' . $nomBDD;
+            self::$moi = new PDOSB($serveur, $bdd, $user, $mdp, $prefixe);
         }
         return self::$moi;
     }
@@ -67,7 +64,7 @@ class PDOSB {
      * @return type toutes les informations sur un utilisateur
      */
     public function getInfoUtil($name) {
-        $sql = "select * from " . self::$prefixe . "Client  where id= ?";
+        $sql = "select * from " . $this->prefixe . "Client  where id= ?";
 
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($name));
@@ -83,9 +80,9 @@ class PDOSB {
      */
     public function getLesClients($idSU = null) {
         if (null === $idSU) {
-            $sql = "select id, nom ,prenom from " . self::$prefixe . "Client order by 2, 3 ";
+            $sql = "select id, nom ,prenom from " . $this->prefixe . "Client order by 2, 3 ";
         } else {
-            $sql = "select id, nom ,prenom from " . self::$prefixe . "Client where id <> ? order by 2, 3 ";
+            $sql = "select id, nom ,prenom from " . $this->prefixe . "Client where id <> ? order by 2, 3 ";
         }
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idSU));
@@ -100,7 +97,7 @@ class PDOSB {
      * @return type toutes les informations sur un utilisateur
      */
     public function isSuperUser($name) {
-        $sql = "select count(*) as nb from " . self::$prefixe . "Client  where id= ? and superUser=1";
+        $sql = "select count(*) as nb from " . $this->prefixe . "Client  where id= ? and superUser=1";
 
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($name));
@@ -118,7 +115,7 @@ class PDOSB {
      */
     public function setDerniereCx($num) {
         $date = new DateTime();
-        $sql = "update " . self::$prefixe . "Client set tsDerniereCx = ? where id= ?";
+        $sql = "update " . $this->prefixe . "Client set tsDerniereCx = ? where id= ?";
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($date->format('Y-m-d H:i:s'), $num));
         $this->logSQL($sql . ' (' . $num . ')');
@@ -130,9 +127,9 @@ class PDOSB {
     public function setNouveauUtil($pseudo, $mdp, $prenom, $nom, $estSU = 0) {
         $valDecouvert = $this->getValDefaut("decouvertAutoriseDefaut");
         if (1 === $estSU) {
-            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom,superUser, maxDecouvert) values (?,?,?,?,1,?)";
+            $sql = "insert into " . $this->prefixe . "Client (id, mdp, prenom, nom,superUser, maxDecouvert) values (?,?,?,?,1,?)";
         } else {
-            $sql = "insert into " . self::$prefixe . "Client (id, mdp, prenom, nom, maxDecouvert) values (?,?,?,?,?)";
+            $sql = "insert into " . $this->prefixe . "Client (id, mdp, prenom, nom, maxDecouvert) values (?,?,?,?,?)";
         }
         $this->logSQL($sql . " (" . $pseudo . ", " . $mdp . ", " . $prenom . ", " . $nom . ", " . $valDecouvert . ")");
         $sth = self::$monPdo->prepare($sql);
@@ -145,9 +142,9 @@ class PDOSB {
      */
     public function updateUtil($pseudo, $prenom, $nom, $estSU = 0) {
         if (1 === $estSU) {
-            $sql = "update " . self::$prefixe . "Client set prenom = ?, nom= ?, superUser= 1 where id= ?";
+            $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ?, superUser= 1 where id= ?";
         } else {
-            $sql = "update " . self::$prefixe . "Client set prenom = ?, nom= ? where id= ?";
+            $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ? where id= ?";
         }
         $this->logSQL($sql . " (" . $prenom . ", " . $nom . ", " . $pseudo . ")");
         $sth = self::$monPdo->prepare($sql);
@@ -161,7 +158,7 @@ class PDOSB {
      */
 
     public function verifierAncienMdP($pseudo, $mdp) {
-        $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "Client where id= ? and mdp=?";
+        $sql = "SELECT count(*) as nb FROM " . $this->prefixe . "Client where id= ? and mdp=?";
         $this->logSQL($sql . " (" . $pseudo . ", " . $mdp . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($pseudo, $mdp));
@@ -177,10 +174,10 @@ class PDOSB {
 
     public function setMdP($pseudo, $mdp, $ancien = null) {
         if (null === $ancien) {
-            $sql = "UPDATE " . self::$prefixe . "Client set mdp= ? where id= ?";
+            $sql = "UPDATE " . $this->prefixe . "Client set mdp= ? where id= ?";
             $parametres = array($mdp, $pseudo);
         } else {
-            $sql = "UPDATE " . self::$prefixe . "Client set mdp= ? where id= ? and mdp=?";
+            $sql = "UPDATE " . $this->prefixe . "Client set mdp= ? where id= ? and mdp=?";
             $parametres = array($mdp, $pseudo, $ancien);
         }
         $this->logSQL($sql . " (" . $mdp . ", " . $pseudo . ", " . $ancien . ")");
@@ -195,7 +192,7 @@ class PDOSB {
      */
 
     public function getParam() {
-        $sql = "SELECT * FROM " . self::$prefixe . "Param order by rubrique, id";
+        $sql = "SELECT * FROM " . $this->prefixe . "Param order by rubrique, id";
         $this->logSQL($sql);
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array(null));
@@ -220,7 +217,7 @@ class PDOSB {
      */
 
     public function modifierParam($key, $value) {
-        $sql = "UPDATE " . self::$prefixe . "Param set valeur=? where id=?";
+        $sql = "UPDATE " . $this->prefixe . "Param set valeur=? where id=?";
         $this->logSQL($sql . "(" . $value . ", " . $key . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($value, $key));
@@ -234,7 +231,7 @@ class PDOSB {
 
     public function getValDefaut($idParam) {
 
-        $sql = "SELECT valeur FROM " . self::$prefixe . "Param where `id`=?";
+        $sql = "SELECT valeur FROM " . $this->prefixe . "Param where `id`=?";
         $this->logSQL($sql . "(" . $idParam . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idParam));
@@ -262,10 +259,10 @@ class PDOSB {
         if (null === $numMouvement) {
             $numMouvement = $this->getProchainNumMouvement($idCli, $idCompte);
         }
-        $sql = "insert into " . self::$prefixe . "Mouvement (idCli, num,montant,idTiers) value (?,?,?,?)";
-        $this->logSQL($sql . "(" . $idCli . ", "  . $numMouvement . ", " . $montant . ", " . $idTiers  . ")");
+        $sql = "insert into " . $this->prefixe . "Mouvement (idCli, num,montant,idTiers) value (?,?,?,?)";
+        $this->logSQL($sql . "(" . $idCli . ", " . $numMouvement . ", " . $montant . ", " . $idTiers . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli,  $numMouvement, $montant, $idTiers));
+        $sth->execute(array($idCli, $numMouvement, $montant, $idTiers));
 
         return $sth;
     }
@@ -277,7 +274,7 @@ class PDOSB {
 
     public function getProchainNumMouvement($idCli) {
 
-        $sql = "SELECT max(num)+1 as n FROM " . self::$prefixe . "Mouvement where `idCli`=? ";
+        $sql = "SELECT max(num)+1 as n FROM " . $this->prefixe . "Mouvement where `idCli`=? ";
         $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
@@ -297,7 +294,7 @@ class PDOSB {
         if (null === $nb) {
             $nb = $this->getValDefaut("nbLigneAffiche");
         }
-        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idCli`=? order by ts desc limit " . $nb;
+        $sql = "SELECT * FROM " . $this->prefixe . "Mouvement M left join " . $this->prefixe . "Client C on C.id=idTiers where `idCli`=? order by ts desc limit " . $nb;
         $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
@@ -305,24 +302,7 @@ class PDOSB {
         return $ligne;
     }
 
-    /*
-     * Formulaire de visualisation du SU
-     * Renvoie les nb dernières opérations vers le compte ciblé
-     * NB renvoie les opérations triées à rebours
-     */
-
-    public function getDernieresOperationsVersClient($idCli, $nb = null) {
-        if (null === $nb) {
-            $nb = $this->getValDefaut("nbLigneAffiche");
-        }
-        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement where `idTiers`=? and  order by ts desc limit " . $nb;
-        $this->logSQL($sql . "(" . $idCli .  ")");
-        $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($idCli));
-        $ligne = $sth->fetchAll();
-        return $ligne;
-    }
-
+  
     /*
      * Formulaire de visualisation du SU
      * Renvoie les nb dernières opérations 
@@ -357,7 +337,11 @@ class PDOSB {
                 case 5: $tri = "order by montant desc,ts desc";
                     break;
             }
-        $sql = "SELECT * FROM " . self::$prefixe . "Mouvement   " . $tri . "  limit " . $nb;
+        $sql = "SELECT C.nom as nomC, C.prenom as prenomC, M.*, T.nom as nomT, ";
+        $sql .= "T.prenom as prenomT, T.superUser as suT, C.superUser as suC FROM " ;
+        $sql .= $this->prefixe . "Mouvement M left join " . $this->prefixe;
+        $sql .= "Client C on  C.id = idCli left join " . $this->prefixe ;
+        $sql .= "Client T on T.id=idTiers " . $tri . "  limit " . $nb;
         $this->logSQL($sql);
         $sth = self::$monPdo->prepare($sql);
         $sth->execute($injection);
@@ -371,8 +355,8 @@ class PDOSB {
      */
 
     public function getSolde($idCli) {
-        $sql = "SELECT sum(montant) as solde FROM " . self::$prefixe . "Mouvement where `idCli`=? ";
-        $this->logSQL($sql . "(" . $idCli .")");
+        $sql = "SELECT sum(montant) as solde FROM " . $this->prefixe . "Mouvement where `idCli`=? ";
+        $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
         $ligne = $sth->fetch();
@@ -385,7 +369,7 @@ class PDOSB {
      */
 
     public function getLesSoldes() {
-        $sql = "SELECT idCli, concat(C.prenom,' ',C.nom) as nomprenom,sum(montant) as solde FROM " . self::$prefixe . "Mouvement M, " . self::$prefixe . "Client C where C.id=idCli group by idCli, nomprenom";
+        $sql = "SELECT idCli, concat(C.prenom,' ',C.nom) as nomprenom,sum(montant) as solde, superUser, tsDerniereCx  FROM " . $this->prefixe . "Mouvement M, " . $this->prefixe . "Client C where C.id=idCli group by idCli, nomprenom";
         $this->logSQL($sql);
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array());
@@ -398,7 +382,7 @@ class PDOSB {
      */
 
     public function getDecouvert($idCli) {
-        $sql = "SELECT maxDecouvert FROM " . self::$prefixe . "Client where `idCli`=? ";
+        $sql = "SELECT maxDecouvert FROM " . $this->prefixe . "Client where `idCli`=? ";
         $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
@@ -412,7 +396,7 @@ class PDOSB {
      */
 
     public function existe($idCli, $idCompte) {
-        $sql = "SELECT count(*) as nb FROM " . self::$prefixe . "Client where `idCli`=? ";
+        $sql = "SELECT count(*) as nb FROM " . $this->prefixe . "Client where `idCli`=? ";
         $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
@@ -431,7 +415,6 @@ class PDOSB {
         // 
         // $mesPost est un tableau associatif contenant les nouvelles valeurs filtrées
         if ($enregistrementOK !== null) { // on reporte ces modifications dans la BD
-           
             $res = $this->initialiserCompteClient($mesPost['id']);
             $textNav = "Nouveau client " . $mesPost['id'] . " créé.";
         } else {
@@ -441,7 +424,7 @@ class PDOSB {
     }
 
     public function effacerUnClient($num) {
-        $sql = "DELETE FROM " . self::$prefixe . "Client where `id`=? ";
+        $sql = "DELETE FROM " . $this->prefixe . "Client where `id`=? ";
         $this->logSQL($sql . "(" . $num . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($num));
@@ -449,7 +432,7 @@ class PDOSB {
     }
 
     public function effacerTousLesMouvementsDUnClient($num) {
-        $sql = "DELETE FROM " . self::$prefixe . "Mouvement where `idCli`=? or idTiers = ?";
+        $sql = "DELETE FROM " . $this->prefixe . "Mouvement where `idCli`=? or idTiers = ?";
         $this->logSQL($sql . "(" . $num . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($num, $num));

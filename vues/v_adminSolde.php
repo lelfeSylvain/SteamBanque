@@ -1,14 +1,16 @@
-<section name = 'soldes' id = 'soldes' class='soldes' >
-    <form method="POST" id ='fsolde' action="index.php?uc=supprimer&num=in"  enctype="multipart/form-data" class="formulaireCourt" onsubmit="return verif();">	
-    Soldes <table >
-            <tr><th>num Compte</th><th>Nom Client</th><th>solde</th><th>sélection</th></tr>
+<section name = 'soldes' id = 'soldes' class='tous soldes' >
+    Soldes
+    <form method="post" id ='fsolde' action="index.php?uc=supprimer&num=in"  class="formulaireCourt" onsubmit="return verif();">	
+        <table >
+            <tr><th>num Compte</th><th>Nom Client</th><th>solde</th><th>dernière connexion</th><th>sélection</th></tr>
             <?php
             $couleur = "claire";
             $i = 0;
-            foreach ($lesSoldes as list($numCli, $nomCli, $leSolde)) {
+            foreach ($lesSoldes as list($numCli, $nomCli, $leSolde, $su, $ts)) {
                 echo "<tr class='t" . $couleur . "'><td class='tnumcpt'>" . $numCli;
-                echo "</td><td class='tlib'>" . $nomCli . "</td><td class='tmontant'>";
-                echo $leSolde . " " . $_SESSION['symbole'] . " </td><td>";
+                echo "</td><td class='tlib'>" . identite('', $nomCli, $su) . "</td><td class='tmontant'>";
+                echo montant($leSolde) . " </td><td class='tdate'>";
+                echo $ts . "</td><td class='tselection'>";
                 echo "<INPUT type='checkbox' id ='choix" . $i . "' name='choix[]' value='";
                 echo $numCli . "' ></td></tr>" . EOL;
                 if ('claire' === $couleur) {
@@ -25,36 +27,33 @@
         </div>
     </form>
 
-    <script>
-        var inputs = document.getElementsByTagName('input');
-        var form = document.getElementById("fsolde");
-
-        function test() {
-            var c = inputs.length;
-            var n = 0;
-            for (var i = 0; i < c; i++) {
-                if (inputs[i].type === 'checkbox' && inputs[i].checked) {
-                    n++;
-                }
-            }
-            return n;
-        }
-
-        function verif() {
-            var tot = test();
-            var pluriel = "ce";
-            if (tot > 1) {
-                pluriel += 's ' + tot + ' clients';
-            } else if (1 === tot) {
-                pluriel = 'ce client';
-            } else {
-                return false;
-            }
-            return confirm('Etes-vous sur de vouloir effacer ' + pluriel);
-        }
-
-
-
-    </script>
-
 </section>
+<script>
+    function test() {
+        var inputs = document.getElementsByTagName('input');
+        var c = inputs.length;
+        var n = 0;
+        for (var i = 0; i < c; i++) {
+            if (inputs[i].type === 'checkbox' && inputs[i].checked) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    function verif() {
+        var tot = test();
+        var pluriel = "ce";
+        if (tot > 1) {
+            pluriel += 's ' + tot + ' clients';
+        } else if (1 === tot) {
+            pluriel = 'ce client';
+        } else {
+            return false;
+        }
+        return confirm('Etes-vous sur de vouloir effacer ' + pluriel);
+    }
+
+
+
+</script>

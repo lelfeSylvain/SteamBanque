@@ -3,7 +3,7 @@
     <nav class='pied'>
         <div class='pied'>
             <?php
-            echo $textNav . $phraseNbVisiteur . "<p>".$GLOBALS['titre']." v0.0.2 alpha - <img src='https://licensebuttons.net/l/by-nc-sa/3.0/80x15.png' alt='cc-by-nc-sa' /></p>" . EL;
+            echo $textNav . $phraseNbVisiteur . "<p>".$GLOBALS['copyright']." - <img src='https://licensebuttons.net/l/by-nc-sa/3.0/80x15.png' alt='cc-by-nc-sa' /></p>" . EL;
             ?>
         </div>
     </nav>    

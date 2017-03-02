@@ -1,16 +1,16 @@
-<section name = 'import' id = 'import' class ='import'  >
+<section name = 'import' id = 'import' class ='tous import'  >
     <form method="POST" action="index.php?uc=importer&num=in"  enctype="multipart/form-data" class="formulaireCourt">	
-        <div class='formulaireLigneChamp'>Importer un fichier CSV au format num;prenom;nom;codepin <br />Attention la première ligne contient les entêtes</div>
-        <div class='formulaireLigneChamp'>
-            <input type="hidden" name="MAX_FILE_SIZE" value="10000">
+        <div class='formulaireLigneChamp'>Importer un fichier CSV <br />
+            au format num;prenom;nom;codepin Attention la première ligne contient les entêtes de colonnes
         </div>
         <div class='formulaireLigneChamp'>
+            <input type="hidden" name="MAX_FILE_SIZE" value="10000">
+
             Fichier : <input id="uploadInput" type="file" name="mesFichiers" onchange="updateSize();">
             selected files: <span id="fileNum">0</span>; 
             total size: <span id="fileSize">0</span>
-        </div>
-        <div class='formulaireLigneChamp'>
-            <input type="submit" name="envoyer" value="Envoyer le fichier">
+
+            <input type="submit" name="envoyer" value="Envoyer le fichier" class='bouton validation'>
         </div>
     </form> 
 </section>    

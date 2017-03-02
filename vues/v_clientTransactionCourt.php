@@ -1,4 +1,4 @@
-<section class='transaction' >
+<section class='transaction tous' >
     <div class='accueilTitre'>               
         Réaliser un virement :
     </div>

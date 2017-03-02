@@ -2,7 +2,7 @@
 $text = "";
 $lib = array("date", "compte", "<-- & date", "--> & date", "tiers", "valeurs");
 ?>
-<section name = 'historique' id = 'historique' class = 'historique' >
+<section name = 'historique' id = 'historique' class = 'tous historique' >
     Mouvements
     <form name="frmTri" method="post" action="index.php?uc=defaut&num=actuel">
         <table>           
@@ -24,17 +24,19 @@ $lib = array("date", "compte", "<-- & date", "--> & date", "tiers", "valeurs");
             <?php
             $couleur = "claire";
             foreach ($lesDernieresOperations as $uneOp) {
-
-                
-                    $numCptTiers = $uneOp['idTiers'];
-                    $numCpt = $uneOp['idCli'];
-               
+                $numCptTiers = numCompte($uneOp['idTiers'], $uneOp['prenomT'], $uneOp['nomT'], $uneOp['suT']);
+                $numCpt = numCompte($uneOp['idCli'], $uneOp['prenomC'], $uneOp['nomC'], $uneOp['suC']);
                 if (0 > $uneOp['montant']) {
                     $sens = " à destination du compte N° ";
                 } else {
-                    $sens = " en provenance du compte N° ";
+
+                    if ($uneOp['idTiers'] === $_SESSION['fictif']) {
+                        $sens = " solde initial ";
+                    } else {
+                        $sens = " en provenance du compte N° ";
+                    }
                 }
-                $ligne = "<tr class='t" . $couleur . "'><td class='tdate'>" . $uneOp['ts'] . "</td><td class='tnumcpt'>" . $numCpt . "</td><td class='tlib'>" . $sens . "</td><td class='tnumcpt'>" . $numCptTiers . "</td><td class='tmontant'>" . $uneOp['montant'] . " " . $_SESSION['symbole'] . "</td></tr>" . EL;
+                $ligne = "<tr class='t" . $couleur . "'><td class='tdate'>" . $uneOp['ts'] . "</td><td class='tnumcpt'>" . $numCpt . "</td><td class='tlib'>" . $sens . "</td><td class='tnumcpt'>" . $numCptTiers . "</td><td class='tmontant'>" . montant($uneOp['montant']) . "</td></tr>" . EL;
                 if ($_SESSION['affichageChronologique']) {
                     $text = $ligne . $text;
                 } else {

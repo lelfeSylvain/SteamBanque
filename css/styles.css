@@ -9,6 +9,8 @@
  ************************************************************************/
 body {
     background-color : #333;
+    background-image : url(../images/fond.png);
+    background-repeat:no-repeat;
     /* gère les coupures de mots */
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
@@ -76,8 +78,11 @@ nav.principal {
 
 .tdate {
     font-size : 0.8em;
+    text-align : center;
 }
-
+.tselection {
+    text-align : center;
+}
 .tlib {
     padding: 0 0 0 10px ;
     font-size : 1em;
@@ -93,7 +98,30 @@ nav.principal {
     text-align: center;
     padding: 0 0 0 10px ;
 }
+.tespace {
+    width: 2%;
+}
+.trubrique {
+    height:40px;
+    color: darkorange;
+}
+.ttparam {
+    width: 100%;
+}
+.tmotcle {
+    width: 21%;
+}
+.tchamp {
+    width: 30%;
+}
+.tcommentaire {
+    width: 47%;
+}
+input.tchamp {
+    width:90%;
+}
 
+/* pour gérer l'affichage une ligne sur deux'*/
 .tclaire {
     background-color : grey;
     color:  black;
@@ -102,20 +130,42 @@ nav.principal {
     background-color :darkgrey ;
     color:  black;
 }
+/* span identité client */
+span.su {
+    color:  darkblue;
+    font-size : 0.8em;
+}
 
+span.normal {
+    color:  black;
+    font-size : 0.8em;
+}
+/* span montant coloré */
+span.negatif {
+    color:  darkred;
+}
+span.positif {
+    color:  black;
+}
 /* **************************************************
 SteamBanque : Sections des pages accueils
 *************************************************** */
 /* section principal de l'accueil */
-section {
+.tous {
     background-color:  grey;
     color:black;
+    padding : 3px  ;
+    margin :  5px  0 5px 0;
 }
 
 /* */
 .bilanoperation {
-background-color:  lightcoral;
+    background-color:  lightcoral;
     color:black;
+}
+
+.corps {
+    margin : 0 3px  0 3px;
 }
 
 .bonjour {
@@ -202,7 +252,7 @@ SteamBanque : Formulaires
 /* tous les formulaires */
 .formulaire {
 
-    width: 80%;
+    width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
 }

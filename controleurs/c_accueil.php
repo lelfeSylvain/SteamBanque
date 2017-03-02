@@ -2,12 +2,10 @@
 
 
 if (!$estSU) {// formulaire client
-    if (!isset($_SESSION['numCompte'])) {
-        $_SESSION['numCompte'] = $pdo->getValDefaut("numCompteClient") + 1;
-    }
-    $lesDernieresOperations = $pdo->getDernieresOperationsDuClient($_SESSION['id'], $_SESSION['numCompte']);
+    
+    $lesDernieresOperations = $pdo->getDernieresOperationsDuClient($_SESSION['id']);
     $estClient = 1;// pour gérer le formulaire abrégé des transactions
-    $solde = $pdo->getSolde($_SESSION['id'], $_SESSION['numCompte']);
+    $solde = $pdo->getSolde($_SESSION['id']);
     
 } else {// formulaire admin
     $trier = filter_input(INPUT_POST,'trier', FILTER_SANITIZE_NUMBER_INT);
