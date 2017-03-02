@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <?php
 /* Projet SteamBanque
-  sylvain 18 décembre 2016
- * temps écoulé = 34h00
+  sylvain 18 décembre 2016 - 2 mars 2017
+ * temps écoulé = 38h00
  */
 require_once 'inc/fonctions.php'; //appelle tous les 'include' et fonctions utilitaires
 

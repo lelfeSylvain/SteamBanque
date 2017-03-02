@@ -5,7 +5,7 @@ $lib = array("date", "compte", "<-- & date", "--> & date", "tiers", "valeurs");
 <section name = 'historique' id = 'historique' class = 'tous historique' >
     Mouvements
     <form name="frmTri" method="post" action="index.php?uc=defaut&num=actuel">
-        <table>           
+        <table class="ttparam">           
             <tr> <?php
                 for ($i = 0; $i < 6; $i++) {
                     if (3 != $i)

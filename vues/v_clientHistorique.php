@@ -8,7 +8,7 @@
     echo montant($solde)  . EOL;
     $text = "";
     ?>
-    <table>
+    <table class="ttparam">
         <tr> <th>date</th> <th>libellé</th> <th>valeurs</th> </tr>
 
         <?php

@@ -27,7 +27,7 @@ $DOSSIERUPLOAD = 'upload/';
 $GLOBALS['titre'] = $pdo->getValDefaut("TitreApplication");
 $GLOBALS['tailleMaxi'] = 10000; // On limite le fichier à 100Ko 
 $GLOBALS['grainDeSel'] = $pdo->getValDefaut("grainDeSel"); // renforcement de mots de passe
-$GLOBALS['version'] = "1.0.0.beta";
+$GLOBALS['version'] = "1.0.1.beta";
 $GLOBALS['auteur'] = "<a href='mailto:lelfe.sylvain@laposte.net?subject=SteamBanque&body=Bonjour Sylvain,\nJe trouve ton application vraiment génial. Je voudrai t envoyer 10 000 000 € sur un compte en Suisse pour te remercier.  :)'>l'elfe Sylvain</a>";
 $GLOBALS['copyrightImage']=$pdo->getValDefaut("copyrightImage");
  $GLOBALS['copyrightImage']="<a href='".$GLOBALS['copyrightImage']."'>"."image de fond"."</a>";

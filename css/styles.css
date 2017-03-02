@@ -162,6 +162,9 @@ SteamBanque : Sections des pages accueils
 .bilanoperation {
     background-color:  lightcoral;
     color:black;
+    
+    padding : 3px  ;
+    margin :  5px  0 5px 0;
 }
 
 .corps {
@@ -222,11 +225,6 @@ footer {
     display : flex;
     flex-flow : column wrap-reverse;
     justify-content:  flex-end;
-    margin-right: 5px;
-
-
-
-
 }
 
 footer>nav {
@@ -352,4 +350,24 @@ formulaire de saisie
 .bouton {
     display : flex;
     justify-content: space-around;
+}
+
+.large{
+    width: 200px;
+}
+
+#msg {
+    color:  brown;
+}
+
+.mrp {
+    margin-right: 10px;
+}
+
+.mrp:invalid {
+    background-color:  #aa6666;
+}
+
+.mrp:valid {
+    background-color:  #55aa55;
 }

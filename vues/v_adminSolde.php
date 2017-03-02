@@ -1,7 +1,7 @@
 <section name = 'soldes' id = 'soldes' class='tous soldes' >
     Soldes
-    <form method="post" id ='fsolde' action="index.php?uc=supprimer&num=in"  class="formulaireCourt" onsubmit="return verif();">	
-        <table >
+    <form method="post" id ='fsolde' action="index.php?uc=supprimer&num=in"  class="formulaire" >	
+        <table class="ttparam">
             <tr><th>num Compte</th><th>Nom Client</th><th>solde</th><th>dernière connexion</th><th>sélection</th></tr>
             <?php
             $couleur = "claire";
@@ -12,7 +12,7 @@
                 echo montant($leSolde) . " </td><td class='tdate'>";
                 echo $ts . "</td><td class='tselection'>";
                 echo "<INPUT type='checkbox' id ='choix" . $i . "' name='choix[]' value='";
-                echo $numCli . "' ></td></tr>" . EOL;
+                echo $numCli . "' ></td></tr>" . EL;
                 if ('claire' === $couleur) {
                     $couleur = 'foncee';
                 } else {
@@ -30,7 +30,6 @@
 </section>
 <script>
     function test() {
-        var inputs = document.getElementsByTagName('input');
         var c = inputs.length;
         var n = 0;
         for (var i = 0; i < c; i++) {
@@ -54,6 +53,14 @@
         return confirm('Etes-vous sur de vouloir effacer ' + pluriel);
     }
 
+    var inputs = document.getElementsByTagName('input');
+    var monformulaire = document.getElementById('fsolde');
+
+    monformulaire.addEventListener('submit', function (e) {
+        if (! verif())   {
+            e.preventDefault();}
+        
+    });
 
 
 </script>

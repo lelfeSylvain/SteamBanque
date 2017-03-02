@@ -1,4 +1,4 @@
-Modifier les paramètres des clients</div>
+Modifier les paramètres de l'applicaion</div>
 
 </header>
 <p><?php

@@ -1,53 +1,56 @@
 Ajouter un nouveau client</div>
 
 </header>
-<p><?php
-    if ("check" === $num) {
+<section class='corps'>
+    <?php if ('' != $textNav) { ?>
+        <section class='bilanoperation'>
+            <p>
+                <?php echo $textNav; ?>
+            </p>
+        </section>
+    <?php } ?>
+    <section class='tous'>
+        <form method="post" action="index.php?uc=ajouterClient&num=check" name='ajouterClient' id='ajouterClient' class="formulaire" onsubmit="encodeMDPenMD5_NouveauUtil()">
+            <div class='formulaireLigneRadio'>               
+                Veuillez saisir les informations suivantes :
+            </div>
+            <div class='formulaireLigneChamp'>
+                <p class="palibel large">numéro Client*  :</p>
+                <input type="text" name="id" value="" id="id" size="10" class="mrp" required >        
+            </div>
+            <div class='formulaireLigneChamp'>
+                <p class="palibel large">Nom du Client*  :</p>
+                <input type="text" name="nom" value="" id="nom" size="100" class="mrp" required >
+            </div>
+            <div class='formulaireLigneChamp'>
+                <p class="palibel large">Prenom du Client*  :</p>
+                <input type="text" name="prenom" value="" id="prenom" size="100" class="mrp" required >
+            </div>
+            <div class='formulaireLigneChamp'>
+                <p class="palibel large">Mot de passe*  :</p>
+                <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">
+                <label class="">caractères autorisés (<?php echo $_SESSION['commentaireRegex']; ?>)</label>
+            </div>
+            <div class='formulaireLigneChamp'>
+                <p class="palibel large">Confirmation* : </p>
+                <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">        
+                <label id="msg"></label>
+            </div>
+            <div class='formulaireLigneChamp'>
+                <input type="checkbox" name="estSU" id="estSU" value="1">
+                <label>Super Utilisateur</label>
+            </div>
+            <div class='formulaireLigneChamp'>
+                <label>* : champs sont obligatoires.</label>
+            </div>
+            <div class='formulaireLigneChamp'>
+                <input type="reset" value="Effacer" id="btnAnnuler" class="bouton validation">
+                <input type="submit" value="Créer" id="btnCreer" class="bouton validation">
 
-        echo $textNav;
-        echo "</p><p>";
-    }
-    ?>
-<form method="post" action="index.php?uc=ajouterClient&num=check" name='ajouterClient' id='ajouterClient' class="formulaire" onsubmit="encodeMDPenMD5_NouveauUtil()">
-    <div class='formulaireLigneRadio'>               
-        Veuillez saisir les informations suivantes :
-    </div>
-    <div class='formulaireLigneChamp'>
-        <p class="palibel large">numéro Client*  :</p>
-        <input type="text" name="id" value="" id="id" size="10" class="mrp" required >        
-    </div>
-    <div class='formulaireLigneChamp'>
-        <p class="palibel large">Nom du Client*  :</p>
-        <input type="text" name="nom" value="" id="nom" size="100" class="mrp" required >
-    </div>
-    <div class='formulaireLigneChamp'>
-        <p class="palibel large">Prenom du Client*  :</p>
-        <input type="text" name="prenom" value="" id="prenom" size="100" class="mrp" required >
-    </div>
-    <div class='formulaireLigneChamp'>
-        <p class="palibel large">Mot de passe*  :</p>
-        <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">
-        <label class="">caractères autorisés (<?php echo $_SESSION['commentaireRegex']; ?>)</label>
-    </div>
-    <div class='formulaireLigneChamp'>
-        <p class="palibel large">Confirmation* : </p>
-        <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">        
-        <label id="msg"></label>
-    </div>
-    <div class='formulaireLigneChamp'>
-        <input type="checkbox" name="estSU" id="estSU" value="1">
-        <label>Super Utilisateur</label>
-    </div>
-    <div class='formulaireLigneChamp'>
-        <label>* : champs sont obligatoires.</label>
-    </div>
-    <div class='formulaireLigneChamp'>
-        <input type="reset" value="Effacer" id="btnAnnuler" class="boutonChanger">
-        <input type="submit" value="Créer" id="btnCreer" class="boutonChanger">
-        
-    </div>
-</form>
-
+            </div>
+        </form>
+    </section>
+</section>
 <script>
     var reponse = true;
     var estSU = document.getElementById('estSU');

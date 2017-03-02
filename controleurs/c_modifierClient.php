@@ -3,10 +3,10 @@
 if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
     if ("choix" === $num) {// on vient de choisir le client à modifier
        $monIdChoisi = filter_input(INPUT_POST, 'choixClient' , FILTER_SANITIZE_STRING); 
-       list($idClient, $nomClient, $prenomClient, $mdp, $ts, $estSUClient) = $pdo->getInfoUtil($monIdChoisi);
+       list($idClient, $nomClient, $prenomClient, $mdp, $ts, $estSUClient,$decouvert) = $pdo->getInfoUtil($monIdChoisi);
         include("vues/v_modifierClient.php");  
     }elseif ("check" === $num) {
-        $lesPost = array('id', 'nom', 'prenom');
+        $lesPost = array('id', 'nom', 'prenom','decouvert');
         $tabFiltre = array();
         foreach ($lesPost as $val) {
             $tabFiltre[$val] =  FILTER_SANITIZE_STRING;
@@ -14,10 +14,10 @@ if ($pdo->isSuperUser($_SESSION['id'])) {// seulement le SU
         $mesPost = filter_input_array(INPUT_POST, $tabFiltre);
         // on filtre la case à cocher
         if (filter_has_var(INPUT_POST, 'estSU')) {
-            $enregistrementOK= $pdo->updateUtil($mesPost['id'], $mesPost['prenom'], $mesPost['nom'],1);
+            $enregistrementOK= $pdo->updateUtil($mesPost['id'], $mesPost['prenom'], $mesPost['nom'],$mesPost['decouvert'],1);
         }
         else {
-            $enregistrementOK= $pdo->updateUtil($mesPost['id'], $mesPost['prenom'], $mesPost['nom']);
+            $enregistrementOK= $pdo->updateUtil($mesPost['id'], $mesPost['prenom'], $mesPost['nom'],$mesPost['decouvert']);
         }
 
         // 

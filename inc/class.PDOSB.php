@@ -80,9 +80,9 @@ class PDOSB {
      */
     public function getLesClients($idSU = null) {
         if (null === $idSU) {
-            $sql = "select id, nom ,prenom from " . $this->prefixe . "Client order by 2, 3 ";
+            $sql = "select id, nom ,prenom, superUser from " . $this->prefixe . "Client order by 2, 3 ";
         } else {
-            $sql = "select id, nom ,prenom from " . $this->prefixe . "Client where id <> ? order by 2, 3 ";
+            $sql = "select id, nom ,prenom , superUser from " . $this->prefixe . "Client where id <> ? order by 2, 3 ";
         }
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idSU));
@@ -140,15 +140,15 @@ class PDOSB {
     /** modifie un utilisateur dans la base
      * par défaut ce n'est pas un super user
      */
-    public function updateUtil($pseudo, $prenom, $nom, $estSU = 0) {
+    public function updateUtil($pseudo, $prenom, $nom, $decouvert, $estSU = 0) {
         if (1 === $estSU) {
-            $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ?, superUser= 1 where id= ?";
+            $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ?, maxDecouvert= ? superUser= 1 where id= ?";
         } else {
-            $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ? where id= ?";
+            $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ? , maxDecouvert= ? where id= ?";
         }
-        $this->logSQL($sql . " (" . $prenom . ", " . $nom . ", " . $pseudo . ")");
+        $this->logSQL($sql . " (" . $prenom . ", " . $nom . ", " . $pseudo . ", " .$decouvert .")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($prenom, $nom, $pseudo));
+        $sth->execute(array($prenom, $nom,$decouvert, $pseudo));
         return $sth;
     }
 
@@ -382,7 +382,7 @@ class PDOSB {
      */
 
     public function getDecouvert($idCli) {
-        $sql = "SELECT maxDecouvert FROM " . $this->prefixe . "Client where `idCli`=? ";
+        $sql = "SELECT maxDecouvert FROM " . $this->prefixe . "Client where `id`=? ";
         $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
@@ -395,8 +395,8 @@ class PDOSB {
      * Renvoie 1 si le compte ciblé existe
      */
 
-    public function existe($idCli, $idCompte) {
-        $sql = "SELECT count(*) as nb FROM " . $this->prefixe . "Client where `idCli`=? ";
+    public function existe($idCli) {
+        $sql = "SELECT count(*) as nb FROM " . $this->prefixe . "Client where `id`=? ";
         $this->logSQL($sql . "(" . $idCli . ")");
         $sth = self::$monPdo->prepare($sql);
         $sth->execute(array($idCli));
