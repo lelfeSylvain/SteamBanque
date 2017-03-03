@@ -26,28 +26,74 @@ body {
     min-height: 100vh;
 }
 
-/* section principal */
-body>section{
-    width:50%;			/* page width minus left and right padding */
-    left:2%;
-    background-color : #333;
-    color: chocolate; 
-    font-family:  "Arial", "Trebuchet MS";
-    min-height: 100vh;
-    display : flex;
-    flex-direction : column;
-    justify-content: space-between;
-    margin : auto;
-}
+
 
 /* tous les header on des majuscules et de l'espacement */
 header {
     font-size : 1.2em;
     font-weight: bold;
     padding-bottom: 3px;
-    text-align: center;
+    padding-left: 20px;
     letter-spacing: 2px;
     font-variant-caps:  petite-caps;
+}
+/* **********************************************************
+Steambanque : présentation général
+Entete design avec coin arrondi
+************************************************************* */
+
+header.principal {
+    background-color : whitesmoke;
+    height: 30px;
+    max-width: 800px;
+    width : 90%;
+    color:  chocolate;
+    border-radius : 0 0 20px 0  / 0 0 90% 0  ;
+    font-size : 1.4em;
+}
+
+/* section principal */
+section.principal {
+    width:60%;			/* page width minus left and right padding */
+    left:2%;
+    background-color : #333;
+    color: chocolate; 
+    font-family:  "Arial", "Trebuchet MS";
+    min-height: 100vh;
+    min-width : 60vh;
+    display : flex;
+    flex-direction : column;
+    justify-content: space-between;
+    margin : auto;
+}
+
+/* Pied de page */
+/* pied de page principal qui est au dessous de la section principal */
+footer.principal {
+    font-size : 0.8em;
+    text-align: right;
+    display : flex;
+    flex-flow : column wrap-reverse;
+    justify-content:  flex-end;
+}
+
+footer>nav {
+    background-color : whitesmoke;
+    margin: 10px 0 0 0; 
+    width : 90%;
+    max-width: 800px;
+    
+    color:  chocolate;
+    border-radius : 20px 0 0 0  / 90% 0 0 0  ;
+
+}
+
+div.pied {
+    padding-right: 5px;
+}
+
+div.pied>p {
+    margin : 0px;
 }
 
 /* les Liens */
@@ -199,50 +245,6 @@ SteamBanque : Sections des pages accueils
 
 }
 
-/* **********************************************************
-Steambanque : présentation général
-Entete design avec coin arrondi
-affiche les dates de la semaine
-************************************************************* */
-
-.entete {
-    background-color : whitesmoke;
-    height: 30px;
-    width: 800px;
-    color:  chocolate;
-    border-radius : 0 0 20px 0  / 0 0 90% 0  ;
-}
-
-body>section>header.principal {
-    font-size : 1.4em;
-}
-
-/* Pied de page */
-/* pied de page principal qui est au dessous de la section principal */
-footer {
-    font-size : 0.8em;
-    text-align: right;
-    display : flex;
-    flex-flow : column wrap-reverse;
-    justify-content:  flex-end;
-}
-
-footer>nav {
-    background-color : whitesmoke;
-    margin: 10px 0 0 0; 
-    width: 800px;
-    color:  chocolate;
-    border-radius : 20px 0 0 0  / 90% 0 0 0  ;
-
-}
-
-div.pied {
-    padding-right: 5px;
-}
-
-div.pied>p {
-    margin : 0px;
-}
 
 /* ******************************************************
 SteamBanque : Formulaires
