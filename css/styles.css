@@ -272,7 +272,7 @@ formulaire de saisie
     padding: 5px ;
     margin: 10px;
     width: 80%;
-    height: 80%;
+    /*height: 80%;*/
 }
 
 .formulaireLigneRadio>label {

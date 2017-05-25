@@ -53,8 +53,8 @@ if ('in' === $num) {
     
         if (($buffer = fgetCSV($handle, 4096,$delimiteurCSV)) !== false) {
             $nbCol=count($buffer);
-            if ($nbCol>4) {
-                $message .= "Le fichier comporte trop de colonnes (max = 4)".EOL;
+            if ($nbCol>5) {
+                $message .= "Le fichier comporte trop de colonnes (max = 5)".EOL;
             }
         }
         // autres lignes
@@ -63,9 +63,10 @@ if ('in' === $num) {
             $prenomCli=iso2utf8($buffer[1], $estEnISO8859);
             $nomCli=iso2utf8($buffer[2], $estEnISO8859);
             $mdp=md5($GLOBALS['grainDeSel'].iso2utf8($buffer[3], $estEnISO8859));
+            $montant=iso2utf8($buffer[4], $estEnISO8859);
             //list($nomEle, $prenomEle, $classeEle) = explode($delimiteurCSV, iso2utf8($buffer, $estEnISO8859));
-            $message .=  $numCli.' '.$prenomCli.' '. $nomCli.EOL;
-            $pdo->creerUnUtilisateurCompletement(array('id'=>$numCli,'prenom'=>$prenomCli,'nom'=>$nomCli,'nouveau'=>$mdp),0);
+            $message .=  $numCli.' '.$prenomCli.' '. $nomCli.' '. $montant.EOL;
+            $pdo->creerUnUtilisateurCompletement(array('id'=>$numCli,'prenom'=>$prenomCli,'nom'=>$nomCli,'nouveau'=>$mdp,'montant'=>$montant),0);
             
             $nbligne++;
         }

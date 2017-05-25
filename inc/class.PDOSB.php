@@ -10,6 +10,7 @@ include_once 'inc/class.MakeLog.php';
  * @date décembre 2016 -mars 2017
  */
 class PDOSB {
+
     // préfixe de toutes les tables
     public $prefixe;
     // classe technique permettant d'accéder au SGBD
@@ -146,9 +147,9 @@ class PDOSB {
         } else {
             $sql = "update " . $this->prefixe . "Client set prenom = ?, nom= ? , maxDecouvert= ? where id= ?";
         }
-        $this->logSQL($sql . " (" . $prenom . ", " . $nom . ", " . $pseudo . ", " .$decouvert .")");
+        $this->logSQL($sql . " (" . $prenom . ", " . $nom . ", " . $pseudo . ", " . $decouvert . ")");
         $sth = self::$monPdo->prepare($sql);
-        $sth->execute(array($prenom, $nom,$decouvert, $pseudo));
+        $sth->execute(array($prenom, $nom, $decouvert, $pseudo));
         return $sth;
     }
 
@@ -244,10 +245,12 @@ class PDOSB {
      * Initialisation d'un compte client 
      */
 
-    public function initialiserCompteClient($idCli) {
-        $montant = $this->getValDefaut("valInitialeCompteClient");
+    public function initialiserCompteClient($idCli, $montant = null) {
+        if (null === $montant) {
+            $montant = $this->getValDefaut("valInitialeCompteClient");
+        }
         $idTiers = $this->getValDefaut("clientTiersFictif");
-        return $this->mouvementCompteClient($idCli, $montant, $idTiers, 0);
+        return $this->mouvementCompteClient($idCli, $montant, $idTiers);
     }
 
     /*
@@ -255,10 +258,10 @@ class PDOSB {
      * Passer un mouvement entre compte
      */
 
-    public function mouvementCompteClient($idCli, $montant, $idTiers, $numMouvement = null) {
-        if (null === $numMouvement) {
-            $numMouvement = $this->getProchainNumMouvement($idCli, $idCompte);
-        }
+    public function mouvementCompteClient($idCli, $montant, $idTiers) {
+
+        $numMouvement = $this->getProchainNumMouvement($idCli);
+
         $sql = "insert into " . $this->prefixe . "Mouvement (idCli, num,montant,idTiers) value (?,?,?,?)";
         $this->logSQL($sql . "(" . $idCli . ", " . $numMouvement . ", " . $montant . ", " . $idTiers . ")");
         $sth = self::$monPdo->prepare($sql);
@@ -302,7 +305,6 @@ class PDOSB {
         return $ligne;
     }
 
-  
     /*
      * Formulaire de visualisation du SU
      * Renvoie les nb dernières opérations 
@@ -338,9 +340,9 @@ class PDOSB {
                     break;
             }
         $sql = "SELECT C.nom as nomC, C.prenom as prenomC, M.*, T.nom as nomT, ";
-        $sql .= "T.prenom as prenomT, T.superUser as suT, C.superUser as suC FROM " ;
+        $sql .= "T.prenom as prenomT, T.superUser as suT, C.superUser as suC FROM ";
         $sql .= $this->prefixe . "Mouvement M left join " . $this->prefixe;
-        $sql .= "Client C on  C.id = idCli left join " . $this->prefixe ;
+        $sql .= "Client C on  C.id = idCli left join " . $this->prefixe;
         $sql .= "Client T on T.id=idTiers " . $tri . "  limit " . $nb;
         $this->logSQL($sql);
         $sth = self::$monPdo->prepare($sql);
@@ -415,7 +417,7 @@ class PDOSB {
         // 
         // $mesPost est un tableau associatif contenant les nouvelles valeurs filtrées
         if ($enregistrementOK !== null) { // on reporte ces modifications dans la BD
-            $res = $this->initialiserCompteClient($mesPost['id']);
+            $res = $this->initialiserCompteClient($mesPost['id'], $mesPost['montant']);
             $textNav = "Nouveau client " . $mesPost['id'] . " créé.";
         } else {
             $textNav = "Problème avec la BD dans l'enregistrement du nouveau client. Le compte n'a pas été créé";

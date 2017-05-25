@@ -1,7 +1,7 @@
 <section name = 'import' id = 'import' class ='tous import'  >
     <form method="POST" action="index.php?uc=importer&num=in"  enctype="multipart/form-data" class="formulaireCourt">	
         <div class='formulaireLigneChamp'>Importer un fichier CSV <br />
-            au format num;prenom;nom;codepin Attention la première ligne contient les entêtes de colonnes
+            au format num;prenom;nom;codepin;montant Attention la première ligne contient les entêtes de colonnes
         </div>
         <div class='formulaireLigneChamp'>
             <input type="hidden" name="MAX_FILE_SIZE" value="10000">

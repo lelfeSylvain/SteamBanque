@@ -1,4 +1,4 @@
-Modifier les paramètres de l'applicaion</div>
+Modifier les paramètres de l'application</div>
 
 </header>
 <p><?php

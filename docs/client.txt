@@ -1,5 +1,5 @@
-num;prenom;nom;codepin
-001;albert;antes;123465
-002;bernard;bartok;123123
-003;charles;coralien;369258
-005;Ersnest;Ellaid;123123
+num;prenom;nom;codepin;montant
+001;albert;antes;123465;10000
+002;bernard;bartok;123123;2000
+003;charles;coralien;369258;300
+005;Ersnest;Ellaid;123123;300

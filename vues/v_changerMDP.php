@@ -24,18 +24,18 @@
                 }
                 ?>
                 </p><p>
-                Un bon mot de passe comporte au moins 8 caractères, n'est ni une date, n'est ni un 
-                nom commun, ni un nom propre. En outre, les caractères utilisés doivent appartenir à <?php echo $_SESSION['commentaireRegex']; ?>.
+                Un bon mot de passe comporte au moins <?php echo $GLOBALS['longueurMini']; ?> caractères, n'est ni une date, n'est ni un 
+                nom commun, ni un nom propre. En outre, les caractères utilisés doivent appartenir à <?php echo $GLOBALS['commentaireRegex']; ?>.
                 </p>
             </div>
             <div class='formulaireLigneChamp'>
                 <p class="palibel large">Nouveau mot de passe*  :</p>
-                <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">
-                <label class="">caractères autorisés (<?php echo $_SESSION['commentaireRegex']; ?>)</label>
+                <input type="password" name="nouveau" value="" id="nouveau" size="30" class="mrp" required pattern="<?php echo $GLOBALS['regex']; ?>">
+                <label class="">caractères autorisés (<?php echo $GLOBALS['commentaireRegex']; ?>)</label>
             </div>
             <div class='formulaireLigneChamp'>
                 <p class="palibel large">Confirmation* : </p>
-                <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="<?php echo $_SESSION['regex']; ?>">        
+                <input type="password" name="confirmation" value="" id="confirmation" size="30" class="mrp" required pattern="<?php echo $GLOBALS['regex']; ?>">        
                 <label id="msg"></label>
             </div>
             <?php if ("changerMdP" === $cible) { ?>
