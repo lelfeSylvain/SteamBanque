@@ -1,7 +1,12 @@
 Projet SteamBanque
+version 1.0.2 beta - 25 mai 2017
+    Corrections de divers bug CSS
+    Importation de clients avec un solde initial différent (voir importation CSV) 
+
+version 1.0.1 beta
   sylvain 18 décembre 2016 - 2 mars 2017
   temps de développement = 39h00
-  version 1.0.1
+
 
 Permet de gérer une banque dans un univers alternatif pour la durée d'un jeu de 
 rôles grandeur nature. A la base le monde était d'ambiance steampunk, d'où le nom.
